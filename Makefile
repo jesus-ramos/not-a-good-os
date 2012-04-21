@@ -1,8 +1,7 @@
 CC       = gcc
-CFLAGS	 = -Wall -m32 -I./include/
-LDFLAGS  = -nostdlib -fno-builtin -nostartfiles -nodefaultlibs
+CFLAGS	 = -Wall -m32 -I./include/ -nostdlib -fno-builtin -nostartfiles -nodefaultlibs
+LDFLAGS  = -melf_i386 -T linker.ld
 LD 	 = ld
-
 AS	 = nasm
 ASFLAGS  = -f elf
 
@@ -33,10 +32,10 @@ $(TARGET) : FORCE
 	$(AS) $(ASFLAGS) -o $@ $<
 
 kernel.bin : $(OBJS) $(ASOBJS) linker.ld
-	$(LD) -melf_i386 -T linker.ld -o kernel.bin $(OBJS) $(ASOBJS)
+	$(LD) $(LDFLAGS) -o kernel.bin $(OBJS) $(ASOBJS)
 
 .c.o :
-	$(CC) $(CFLAGS) $(LDFLAGS) -c $<
+	$(CC) $(CFLAGS) -c $<
 
 TAGS :
 	find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
