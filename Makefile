@@ -1,5 +1,5 @@
 CC       = gcc
-CFLAGS	 = -Wall -m32
+CFLAGS	 = -Wall -m32 -I./include/
 LDFLAGS  = -nostdlib -fno-builtin -nostartfiles -nodefaultlibs
 LD 	 = ld
 
@@ -7,7 +7,7 @@ AS	 = nasm
 ASFLAGS  = -f elf
 
 TARGET   = kernel.img
-SRCS 	 = kernel.c screen.c
+SRCS 	 = kernel.c screen.c port_comm.c string.c
 ASSRCS  = loader.s
 
 OBJS	 = ${SRCS:.c=.o}
@@ -21,7 +21,7 @@ all : kernel.bin $(TARGET)
 depend : .depend
 
 .depend : $(SRCS)
-	$(CC) $(CFLAGS) -MM $^
+	$(CC) $(CFLAGS) -MM $^ > .depend
 
 include .depend
 

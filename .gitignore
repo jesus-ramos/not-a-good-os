@@ -1,3 +1,6 @@
 *.o
 kernel.bin
 kernel.img
+.depend
+.zcache
+pad
