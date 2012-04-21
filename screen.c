@@ -40,14 +40,14 @@ static void fb_scroll()
         for (i = 0; i < 24 * 80; i++)
             fb_mem[i] = fb_mem[i + 80];
         for (i = 24 * 80; i < 25 * 80; i++)
-            fb_mem[i] = (int8_t)BLANK;
+            fb_mem[i] = BLANK;
         cursor_y = 24;
     }
 }
 
 void fb_put_char(char c)
 {
-    uint16_t *loc;
+    volatile uint16_t *loc;
 
     switch (c)
     {
@@ -65,7 +65,7 @@ void fb_put_char(char c)
             cursor_y++;
             break;
         default:
-            loc = (uint16_t *)fb_mem + cursor_y * 80 + cursor_x;
+            loc = fb_mem + cursor_y * 80 + cursor_x;
             *loc = c | ATTR(WHITE, BLACK);
             cursor_x++;
     }
@@ -85,7 +85,7 @@ void fb_clear()
     int i;
 
     for (i = 0; i < 25 * 80; i++)
-        fb_mem[i] = (int8_t)BLANK;
+        fb_mem[i] = BLANK;
 
     cursor_x = 0;
     cursor_y = 0;
