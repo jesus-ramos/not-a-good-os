@@ -7,4 +7,4 @@ void outportb(uint16_t port, uint8_t value);
 uint8_t inportb(uint16_t port);
 uint16_t inportw(uint16_t port);
 
-#endif
+#endif /* _PORT_COMM_H */

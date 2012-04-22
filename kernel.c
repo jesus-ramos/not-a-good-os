@@ -1,8 +1,11 @@
 #include <kernel/screen.h>
 
+#include <asm/desc_tables.h>
+
 void kinit()
 {
     fb_clear();
+    init_descriptor_tables();
 }
 
 int kmain(void *mbd, unsigned int magic)
@@ -15,8 +18,10 @@ int kmain(void *mbd, unsigned int magic)
 
     kinit();
 
-    fb_put_str("And so he delivered unto them framebuffer device drivers\n"
-               "And it was good");
+    fb_put_str("Yep still boots, now with interrupts :)\n");
+
+    asm volatile ("int $0x3");
+    asm volatile ("int $0x4");
 
     return 0;
 }

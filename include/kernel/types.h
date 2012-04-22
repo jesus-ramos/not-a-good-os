@@ -9,4 +9,4 @@ typedef unsigned char  uint8_t;
 typedef char           int8_t;
 typedef int            size_t;
 
-#endif
+#endif /* _TYPES_H */

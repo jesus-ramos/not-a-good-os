@@ -5,17 +5,17 @@ LD 	 = ld
 AS	 = nasm
 ASFLAGS  = -f elf
 
-TARGET   = kernel.img
-SRCS 	 = kernel.c screen.c port_comm.c string.c
-ASSRCS  = loader.s
+TARGET   = kernel.bin
+SRCS 	 = kernel.c screen.c port_comm.c string.c desc_tables.c isr.c
+ASSRCS   = loader.s gdt.s interrupt.s
 
 OBJS	 = ${SRCS:.c=.o}
-ASOBJS  = ${ASSRCS:.s=.o}
+ASOBJS   = ${ASSRCS:.s=.o}
 
 .SUFFIXES :
 .SUFFIXES : .o .c .s
 
-all : kernel.bin $(TARGET)
+all : $(TARGET)
 
 depend : .depend
 
@@ -24,15 +24,11 @@ depend : .depend
 
 include .depend
 
-$(TARGET) : FORCE
-	dd if=/dev/zero of=pad bs=1 count=750
-	cat stage1 stage2 pad kernel.bin > kernel.img
-
 .s.o :
 	$(AS) $(ASFLAGS) -o $@ $<
 
-kernel.bin : $(OBJS) $(ASOBJS) linker.ld
-	$(LD) $(LDFLAGS) -o kernel.bin $(OBJS) $(ASOBJS)
+$(TARGET) : $(OBJS) $(ASOBJS) linker.ld
+	$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS)
 
 .c.o :
 	$(CC) $(CFLAGS) -c $<
@@ -42,7 +38,7 @@ TAGS :
 
 .PHONY : clean FORCE mrproper
 clean :
-	-rm $(TARGET) $(OBJS) $(ASOBJS) kernel.bin
+	-rm $(TARGET) $(OBJS) $(ASOBJS)
 
 mrproper : clean
-	-rm .depend pad
+	-rm .depend
