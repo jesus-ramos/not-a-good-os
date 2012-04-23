@@ -34,11 +34,6 @@ struct idt_ptr
     uint32_t base;
 }__attribute__((packed));
 
-typedef struct gdt_entry gdt_entry_t;
-typedef struct gdt_ptr   gdt_ptr_t;
-typedef struct idt_entry idt_entry_t;
-typedef struct idt_ptr   idt_ptr_t;
-
 void init_descriptor_tables();
 
 /* ISR's */

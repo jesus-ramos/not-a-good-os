@@ -6,10 +6,10 @@
 extern void gdt_flush(uint32_t gdt_ptr);
 extern void idt_flush(uint32_t idt_ptr);
 
-gdt_entry_t gdt_entries[5];
-gdt_ptr_t gdt_ptr;
-idt_entry_t idt_entries[256];
-idt_ptr_t idt_ptr;
+struct gdt_entry gdt_entries[5];
+struct gdt_ptr gdt_ptr;
+struct idt_entry idt_entries[256];
+struct idt_ptr idt_ptr;
 
 static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit,
                          uint8_t access, uint8_t granularity)
@@ -25,7 +25,7 @@ static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit,
 
 static void init_gdt()
 {
-    gdt_ptr.limit = (sizeof(gdt_entry_t) * 5) - 1;
+    gdt_ptr.limit = (sizeof(struct gdt_entry) * 5) - 1;
     gdt_ptr.base = (uint32_t)&gdt_entries;
 
     gdt_set_gate(0, 0, 0, 0, 0);                /* Null segment */
@@ -51,10 +51,10 @@ static void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags
 
 static void init_idt()
 {
-    idt_ptr.limit = sizeof(idt_entry_t) * 256 -1;
+    idt_ptr.limit = sizeof(struct idt_entry) * 256 -1;
     idt_ptr.base  = (uint32_t)&idt_entries;
 
-    memset(&idt_entries, 0, sizeof(idt_entry_t)*256);
+    memset(&idt_entries, 0, sizeof(struct idt_entry)*256);
 
     idt_set_gate( 0, (uint32_t)isr0 , 0x08, 0x8E);
     idt_set_gate( 1, (uint32_t)isr1 , 0x08, 0x8E);
