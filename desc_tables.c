@@ -39,12 +39,12 @@ static void init_gdt()
 
 static void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
 {
-   idt_entries[num].base_low = base & 0xFFFF;
+   idt_entries[num].base_low  = base & 0xFFFF;
    idt_entries[num].base_high = (base >> 16) & 0xFFFF;
 
-   idt_entries[num].selector     = sel;
-   idt_entries[num].zero = 0;
-   idt_entries[num].flags   = flags;
+   idt_entries[num].selector = sel;
+   idt_entries[num].zero     = 0;
+   idt_entries[num].flags    = flags;
    /* USER MODE */
    /* idt_entries[num].flags = flags | 0x60; */
 }
@@ -54,7 +54,7 @@ static void init_idt()
     idt_ptr.limit = sizeof(struct idt_entry) * 256 -1;
     idt_ptr.base  = (uint32_t)&idt_entries;
 
-    memset(&idt_entries, 0, sizeof(struct idt_entry)*256);
+    memset(&idt_entries, 0, sizeof(struct idt_entry) * 256);
 
     idt_set_gate( 0, (uint32_t)isr0 , 0x08, 0x8E);
     idt_set_gate( 1, (uint32_t)isr1 , 0x08, 0x8E);
