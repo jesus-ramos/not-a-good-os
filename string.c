@@ -51,8 +51,7 @@ static int __strcmp(const char *s1, const char *s2, size_t n)
         diff = *s1++ - *s2++;
         if (diff)
             return diff;
-        i++;
-        if (i == n)
+        if (++i == n)
             return 0;
     }
 
