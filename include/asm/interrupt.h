@@ -3,6 +3,10 @@
 
 #include <kernel/types.h>
 
+#include <asm/common.h>
+
+#define IRQ_ENABLED_FLAG (1 << 9)
+
 struct registers
 {
     uint32_t ds;
@@ -25,5 +29,10 @@ struct registers
     uint32_t useresp;
     uint32_t ss;
 };
+
+static inline int irq_enabled()
+{
+    return get_cpu_flags() & IRQ_ENABLED_FLAG;
+}
 
 #endif /* _INTERRUPT_H */

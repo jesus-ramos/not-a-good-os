@@ -30,5 +30,7 @@ int kmain(void *mbd, unsigned int magic)
     if (!strcmp("equals", "equals"))
         fb_put_str("GOOD\n");
 
+    while (1);
+
     return 0;
 }
