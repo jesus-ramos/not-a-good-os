@@ -1,5 +1,6 @@
 global loader
 
+;; kernel.c
 extern kmain
 
 MODULEALIGN equ  1 << 0
