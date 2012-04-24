@@ -10,6 +10,7 @@
 
 #define ATTR_BYTE(fore_color, back_color) ((back_color << 4) | (fore_color & 0x0F))
 #define ATTR(fore_color, back_color) (ATTR_BYTE(fore_color, back_color) << 8)
+
 #define BLANK (0x20 | (ATTR_BYTE(WHITE, BLACK) << 8))
 
 #define BLACK 0

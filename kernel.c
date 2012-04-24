@@ -3,10 +3,12 @@
 
 #include <asm/desc_tables.h>
 
-void kinit()
+int kinit()
 {
     fb_clear();
     init_descriptor_tables();
+
+    return 0;
 }
 
 int kmain(void *mbd, unsigned int magic)
@@ -23,14 +25,6 @@ int kmain(void *mbd, unsigned int magic)
 
     asm volatile ("int $0x3");
     asm volatile ("int $0x4");
-
-    /* Testing asm methods */
-    if (strcmp("equals", "notequals"))
-        fb_put_str("GOOD\n");
-    if (!strcmp("equals", "equals"))
-        fb_put_str("GOOD\n");
-
-    while (1);
 
     return 0;
 }
