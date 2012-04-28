@@ -36,8 +36,11 @@ struct idt_ptr
 
 void init_descriptor_tables();
 
-/* ISR's */
+#define MASTER 0x20
+#define SLAVE  0xA0
+
 #define DEF_ISR(num) extern void isr##num()
+#define DEF_IRQ(num) extern void irq##num()
 
 DEF_ISR(0);
 DEF_ISR(1);
@@ -72,6 +75,22 @@ DEF_ISR(29);
 DEF_ISR(30);
 DEF_ISR(31);
 
-#undef DEF_ISR
+DEF_IRQ(0);
+DEF_IRQ(1);
+DEF_IRQ(2);
+DEF_IRQ(3);
+DEF_IRQ(4);
+DEF_IRQ(5);
+DEF_IRQ(6);
+DEF_IRQ(7);
+DEF_IRQ(8);
+DEF_IRQ(8);
+DEF_IRQ(9);
+DEF_IRQ(10);
+DEF_IRQ(11);
+DEF_IRQ(12);
+DEF_IRQ(13);
+DEF_IRQ(14);
+DEF_IRQ(15);
 
 #endif /* _DESC_TABLES_H */

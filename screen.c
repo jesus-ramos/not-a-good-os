@@ -98,3 +98,19 @@ void fb_put_str(char *str)
     while (*str)
         fb_put_char(*str++);
 }
+
+void fb_put_uint32(uint32_t num)
+{
+    size_t len;
+    uint32_t digits[10];
+
+    len = 0;
+    while (num)
+    {
+        digits[len++] = num % 10;
+        num /= 10;
+    }
+
+    while (len--)
+        fb_put_char('0' + digits[len]);
+}

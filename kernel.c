@@ -1,5 +1,6 @@
 #include <kernel/screen.h>
 #include <kernel/string.h>
+#include <kernel/timer.h>
 
 #include <asm/desc_tables.h>
 
@@ -8,6 +9,8 @@ int kinit()
     fb_clear();
     init_descriptor_tables();
 
+    asm volatile ("sti");
+    
     return 0;
 }
 
@@ -20,11 +23,10 @@ int kmain(void *mbd, unsigned int magic)
     }
 
     kinit();
+    
+    init_timer(50);
 
-    fb_put_str("Yep still boots, now with interrupts :)\n");
-
-    asm volatile ("int $0x3");
-    asm volatile ("int $0x4");
+    while (1);
 
     return 0;
 }
