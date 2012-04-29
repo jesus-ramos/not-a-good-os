@@ -31,6 +31,4 @@ void init_timer(uint32_t freq)
 
     outportb(0x40, low);
     outportb(0x40, high);
-
-    fb_put_str("REGISTERING HANDLER\n");
 }
