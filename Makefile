@@ -1,16 +1,15 @@
-CC       = gcc
-CFLAGS	 = -Wall -m32 -I./include/ -nostdlib -fno-builtin -nostartfiles -nodefaultlibs
-LDFLAGS  = -melf_i386 -T linker.ld
-LD 	 = ld
-AS	 = nasm
-ASFLAGS  = -f elf
+CC      = gcc
+CFLAGS	= -Wall -m32 -I./include/ -nostdlib -fno-builtin -nostartfiles -nodefaultlibs
+LDFLAGS = -melf_i386 -T linker.ld
+LD 	= ld
+AS	= nasm
+ASFLAGS = -f elf
 
-TARGET   = kernel.bin
-SRCS 	 = kernel.c screen.c string.c desc_tables.c isr.c timer.c
-ASSRCS   = loader.s gdt.s interrupt.s
-
-OBJS	 = ${SRCS:.c=.o}
-ASOBJS   = ${ASSRCS:.s=.o}
+TARGET  = kernel.bin
+SRCS 	= kernel.c screen.c string.c desc_tables.c isr.c timer.c vsprintf.c printk.c
+ASSRCS  = loader.s gdt.s interrupt.s
+OBJS	= ${SRCS:.c=.o}
+ASOBJS  = ${ASSRCS:.s=.o}
 
 .SUFFIXES :
 .SUFFIXES : .o .c .s
@@ -24,16 +23,16 @@ depend : .depend
 
 include .depend
 
-.s.o :
-	$(AS) $(ASFLAGS) -o $@ $<
-
 $(TARGET) : $(OBJS) $(ASOBJS) linker.ld
 	$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS)
 
 .c.o :
 	$(CC) $(CFLAGS) -c $<
 
-TAGS :
+.s.o :
+	$(AS) $(ASFLAGS) -o $@ $<
+
+TAGS : FORCE
 	find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
 
 .PHONY : clean FORCE mrproper
