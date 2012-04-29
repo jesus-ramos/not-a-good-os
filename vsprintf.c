@@ -59,7 +59,7 @@ static char *num_to_base(char *str, int num, int base, int size,
     size -= precision;
 
     if (!(type & (PAD_ZEROES + LEFT_JUSTIFIED)))
-        while (size--)
+        while (size-- > 0)
             *str++ = ' ';
     if (sign)
         *str++ = sign;
@@ -71,14 +71,14 @@ static char *num_to_base(char *str, int num, int base, int size,
             *str++ = digits[33];
     }
     if (!(type & LEFT_JUSTIFIED))
-        while (size--)
+        while (size-- > 0)
             *str++ = c;
 
     while (i < precision--)
         *str++ = '0';
-    while (i--)
+    while (i-- > 0)
         *str++ = tmp[i];
-    while (size--)
+    while (size-- > 0)
         *str++ = ' ';
 
     return str;
@@ -155,10 +155,10 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         {
             case 'c':
                 if (!(flags & LEFT_JUSTIFIED))
-                    while (--field_width)
+                    while (--field_width > 0)
                         *str++ = ' ';
                 *str++ = (unsigned char)va_arg(args, int);
-                while (--field_width)
+                while (--field_width > 0)
                     *str++ = ' ';
                 break;
             case 's':
