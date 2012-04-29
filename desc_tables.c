@@ -49,10 +49,9 @@ static void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags
 {
    idt_entries[num].base_low  = base & 0xFFFF;
    idt_entries[num].base_high = (base >> 16) & 0xFFFF;
-
-   idt_entries[num].selector = sel;
-   idt_entries[num].zero     = 0;
-   idt_entries[num].flags    = flags;
+   idt_entries[num].selector  = sel;
+   idt_entries[num].zero      = 0;
+   idt_entries[num].flags     = flags;
    /* USER MODE */
    /* idt_entries[num].flags = flags | 0x60; */
 }
@@ -137,5 +136,6 @@ void init_descriptor_tables()
 {
     init_gdt();
     init_idt();
+    
     memset(&interrupt_handlers, 0, sizeof(isr_t) * 256);
 }

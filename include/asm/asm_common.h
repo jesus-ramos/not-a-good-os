@@ -12,4 +12,14 @@ static inline int get_cpu_flags()
     return flags;
 }
 
+static inline void disable_interrupts()
+{
+    asm volatile ("cli");
+}
+
+static inline void enable_interrupts()
+{
+    asm volatile ("sti");
+}
+
 #endif /* _ASM_COMMON_H */

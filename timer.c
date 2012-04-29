@@ -1,4 +1,4 @@
-#include <kernel/screen.h>
+#include <kernel/stdio.h>
 #include <kernel/timer.h>
 
 #include <asm/interrupt.h>
@@ -9,9 +9,7 @@ uint32_t tick = 0;
 void timer_callback(struct registers *regs)
 {
     tick++;
-    fb_put_str("TIMER TICK: ");
-    fb_put_uint32(tick);
-    fb_put_char('\n');
+    printk("TIMER TICK: %u\n", tick);
 }
 
 void init_timer(uint32_t freq)

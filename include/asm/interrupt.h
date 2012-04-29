@@ -3,9 +3,26 @@
 
 #include <kernel/types.h>
 
-#include <asm/common.h>
+#include <asm/asm_common.h>
 
 #define IRQ_ENABLED_FLAG (1 << 9)
+
+#define IRQ0  32
+#define IRQ1  33
+#define IRQ2  34
+#define IRQ3  35
+#define IRQ4  36
+#define IRQ5  37
+#define IRQ6  38
+#define IRQ7  39
+#define IRQ8  40
+#define IRQ9  41
+#define IRQ10 42
+#define IRQ11 43
+#define IRQ12 44
+#define IRQ13 45
+#define IRQ14 46
+#define IRQ15 47
 
 struct registers
 {
@@ -40,22 +57,5 @@ static inline int irq_enabled()
 {
     return get_cpu_flags() & IRQ_ENABLED_FLAG;
 }
-
-#define IRQ0  32
-#define IRQ1  33
-#define IRQ2  34
-#define IRQ3  35
-#define IRQ4  36
-#define IRQ5  37
-#define IRQ6  38
-#define IRQ7  39
-#define IRQ8  40
-#define IRQ9  41
-#define IRQ10 42
-#define IRQ11 43
-#define IRQ12 44
-#define IRQ13 45
-#define IRQ14 46
-#define IRQ15 47
 
 #endif /* _INTERRUPT_H */

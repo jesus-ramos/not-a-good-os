@@ -1,4 +1,4 @@
-#include <kernel/screen.h>
+#include <kernel/stdio.h>
 
 #include <asm/desc_tables.h>
 #include <asm/interrupt.h>
@@ -10,9 +10,7 @@ void isr_handler(struct registers regs)
 {
     isr_t handler;
     
-    fb_put_str("received interrupt: ");
-    fb_put_uint32(regs.int_num);
-    fb_put_char('\n');
+    printk("Received interrupt: %u\n", regs.int_num);
 
     if (interrupt_handlers[regs.int_num])
     {
