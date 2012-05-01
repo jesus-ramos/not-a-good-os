@@ -5,7 +5,7 @@
 
 #define KEYBOARD_IRQ IRQ1
 
-#define KEY_RELEASED (1 << 8)
+#define KEY_RELEASED (1 << 7)
 
 #define KEYBOARD_DATA_PORT 0x60
 #define KEYBOARD_CMD_PORT  0x64
