@@ -3,7 +3,37 @@
 
 #include <asm/interrupt.h>
 
+#define KEYBOARD_IRQ IRQ1
+
 #define KEY_RELEASED (1 << 8)
+
+#define KEYBOARD_DATA_PORT 0x60
+#define KEYBOARD_CMD_PORT  0x64
+
+#define KEYBOARD_BUSY    0x02
+#define KEYBOARD_DISABLE 0xAD
+#define KEYBOARD_ENABLE  0xAE
+
+static inline void keyboard_wait()
+{
+    while (inportb(KEYBOARD_DATA_PORT) & KEYBOARD_BUSY);
+}
+
+static inline void send_cmd(uint8_t cmd)
+{
+    keyboard_wait();
+    outportb(KEYBOARD_CMD_PORT, cmd);
+}
+
+static inline void disable_keyboard()
+{
+    send_cmd(KEYBOARD_DISABLE);
+}
+
+static inline void enable_keyboard()
+{
+    send_cmd(KEYBOARD_ENABLE);
+}
 
 static char scancode_table[128] =
 {
@@ -17,12 +47,12 @@ static char scancode_table[128] =
     'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'
 };
 
-void keyboard_callback(struct registers *regs)
+void handle_keyboard(struct registers *regs)
 {
     uint8_t scancode;
     char v;
-
-    scancode = inportb(0x60);
+    
+    scancode = inportb(KEYBOARD_DATA_PORT);
     if (!(scancode & KEY_RELEASED))
     {
         v = scancode_table[scancode];
@@ -33,5 +63,5 @@ void keyboard_callback(struct registers *regs)
 
 void init_keyboard()
 {
-    register_interrupt_handler(IRQ1, keyboard_callback);
+    register_interrupt_handler(KEYBOARD_IRQ, handle_keyboard);
 }
