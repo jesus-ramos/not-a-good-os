@@ -4,6 +4,7 @@
 #include <kernel/types.h>
 
 #include <asm/asm_common.h>
+#include <asm/port_comm.h>
 
 #define IRQ_ENABLED_FLAG (1 << 9)
 
@@ -56,6 +57,11 @@ extern isr_t interrupt_handlers[];
 static inline int irq_enabled()
 {
     return get_cpu_flags() & IRQ_ENABLED_FLAG;
+}
+
+static inline void send_eoi()
+{
+    outportb(0x20, 0x20);
 }
 
 #endif /* _INTERRUPT_H */

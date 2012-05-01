@@ -16,6 +16,8 @@
 #define BLACK 0
 #define WHITE 15
 
+#define FB_LOCATION (fb_mem + cursor_y * 80 + cursor_x)
+
 uint16_t cursor_x = 0;
 uint16_t cursor_y = 0;
 
@@ -53,7 +55,12 @@ void fb_put_char(char c)
     switch (c)
     {
         case '\b':
-            if (cursor_x) cursor_x--;
+            if (cursor_x)
+            {
+                cursor_x--;
+                loc = FB_LOCATION;
+                *loc = BLANK;
+            }
             break;
         case '\t':
             cursor_x = (cursor_x + 8) & ~7;
@@ -66,7 +73,7 @@ void fb_put_char(char c)
             cursor_y++;
             break;
         default:
-            loc = fb_mem + cursor_y * 80 + cursor_x;
+            loc = FB_LOCATION;
             *loc = c | ATTR(WHITE, BLACK);
             cursor_x++;
     }
