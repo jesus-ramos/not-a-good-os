@@ -6,7 +6,8 @@ AS	= nasm
 ASFLAGS = -f elf
 
 TARGET  = kernel.bin
-SRCS 	= kernel.c screen.c string.c desc_tables.c isr.c timer.c vsprintf.c printk.c keyboard.c
+SRCS 	= kernel.c screen.c string.c desc_tables.c isr.c timer.c \
+	  vsprintf.c printk.c keyboard.c paging.c panic.c
 ASSRCS  = loader.s gdt.s interrupt.s
 OBJS	= ${SRCS:.c=.o}
 ASOBJS  = ${ASSRCS:.s=.o}

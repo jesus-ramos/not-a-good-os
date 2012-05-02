@@ -1,4 +1,6 @@
 #include <kernel/keyboard.h>
+#include <kernel/paging.h>
+#include <kernel/panic.h>
 #include <kernel/screen.h>
 #include <kernel/stdio.h>
 
@@ -9,6 +11,7 @@ int kinit()
 {
     fb_clear();
     init_descriptor_tables();
+    init_paging();
     init_keyboard();
     enable_interrupts();
     
@@ -25,6 +28,8 @@ int kmain(void *mbd, unsigned int magic)
 
     kinit();
 
+    PANIC("TEST PANIC");
+    
     while (1);
     
     return 0;
