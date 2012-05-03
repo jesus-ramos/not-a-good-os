@@ -75,8 +75,6 @@ int strncmp(const char *s1, const char *s2, size_t n)
 
 #else /* USE_GENERIC */
 
-/* Optimized assembly */
-
 inline void *memset(void *s, char c, size_t count)
 {
     int d0;

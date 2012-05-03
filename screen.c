@@ -16,12 +16,12 @@
 #define BLACK 0
 #define WHITE 15
 
-#define FB_LOCATION (fb_mem + cursor_y * 80 + cursor_x)
+#define FB_LOCATION (vid_mem + cursor_y * 80 + cursor_x)
 
 uint16_t cursor_x = 0;
 uint16_t cursor_y = 0;
 
-volatile uint16_t *fb_mem = (volatile uint16_t *)0xb8000;
+volatile uint16_t *vid_mem = (volatile uint16_t *)0xb8000;
 
 static void fb_move_cursor()
 {
@@ -41,9 +41,9 @@ static void fb_scroll()
     if (cursor_y >= 25)
     {
         for (i = 0; i < 24 * 80; i++)
-            fb_mem[i] = fb_mem[i + 80];
+            vid_mem[i] = vid_mem[i + 80];
         for (i = 24 * 80; i < 25 * 80; i++)
-            fb_mem[i] = BLANK;
+            vid_mem[i] = BLANK;
         cursor_y = 24;
     }
 }
@@ -93,7 +93,7 @@ void fb_clear()
     int i;
 
     for (i = 0; i < 25 * 80; i++)
-        fb_mem[i] = BLANK;
+        vid_mem[i] = BLANK;
 
     cursor_x = 0;
     cursor_y = 0;
@@ -104,20 +104,4 @@ void fb_put_str(char *str)
 {
     while (*str)
         fb_put_char(*str++);
-}
-
-void fb_put_uint32(uint32_t num)
-{
-    size_t len;
-    uint32_t digits[10];
-
-    len = 0;
-    while (num)
-    {
-        digits[len++] = num % 10;
-        num /= 10;
-    }
-
-    while (len--)
-        fb_put_char('0' + digits[len]);
 }

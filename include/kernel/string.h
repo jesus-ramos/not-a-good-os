@@ -1,7 +1,7 @@
 #ifndef _STRING_H
 #define _STRING_H
 
-#include <kernel/types.h>
+#include <kernel/stddef.h>
 
 void *memcpy(void *dest, const void *src, size_t count);
 void *memset(void *s, char c, size_t count);

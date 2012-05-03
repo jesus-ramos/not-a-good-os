@@ -21,14 +21,9 @@ int kinit()
 int kmain(void *mbd, unsigned int magic)
 {
     if (magic != 0x2BADB002)
-    {
-        fb_put_str("BAD MAGIC VALUE FROM LOADER!!! PANIC!!!");
-        return 0xDEADBEEF;
-    }
+        PANIC("BAD MAGIC VALUE FROM BOOTLOADER!!!");
 
     kinit();
-
-    PANIC("TEST PANIC");
     
     while (1);
     

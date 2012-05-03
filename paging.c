@@ -1,4 +1,5 @@
 #include <kernel/paging.h>
+#include <kernel/panic.h>
 #include <kernel/stdio.h>
 
 #include <asm/asm_paging.h>
@@ -6,7 +7,7 @@
 
 void handle_page_fault(struct registers *regs)
 {
-    printk("Page fault, QUICK PANIC!!!");
+    PANIC("HAVEN'T IMPLEMENTED PAGING YET!!!");
 }
 
 void init_paging()
