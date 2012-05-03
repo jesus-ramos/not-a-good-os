@@ -36,7 +36,7 @@ static inline void list_del(struct list_head *entry)
     prev->next = next;
 }
 
-static inline void INIT_LIST_HEAD(struct list_head *list)
+static inline void init_list_head(struct list_head *list)
 {
     list->next = list;
     list->prev = list;
