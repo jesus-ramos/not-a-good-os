@@ -3,13 +3,19 @@
 
 #include <kernel/types.h>
 
-#define MODKEY_CTRL  1
-#define MODKEY_ALT   2
-#define MODKEY_SHIFT 3
+enum mod_key_bits
+{
+    MODKEY_CTRL,
+    MODKEY_ALT,
+    MODKEY_SHIFT
+};
 
-#define SCROLL_LOCK_FLAG 1
-#define NUM_LOCK_FLAG    2
-#define CAPS_LOCK_FLAG   3
+enum lock_key_bits
+{
+    SCROLL_LOCK_BIT,
+    NUM_LOCK_BIT,
+    CAPS_LOCK_BIT
+};
 
 struct keypress_data
 {

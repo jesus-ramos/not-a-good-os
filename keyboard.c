@@ -1,4 +1,5 @@
 #include <kernel/bitops.h>
+#include <kernel/ctype.h>
 #include <kernel/keyboard.h>
 #include <kernel/panic.h>
 #include <kernel/stdio.h>
@@ -178,13 +179,13 @@ static void toggle_lock_key(uint8_t scancode)
     switch (scancode)
     {
         case CAPS_LOCK:
-            key = CAPS_LOCK_FLAG;
+            key = CAPS_LOCK_BIT;
             break;
         case SCROLL_LOCK:
-            key = SCROLL_LOCK_FLAG;
+            key = SCROLL_LOCK_BIT;
             break;
         case NUM_LOCK:
-            key = NUM_LOCK_FLAG;
+            key = NUM_LOCK_BIT;
             break;
         default:
             BUG("INVALID SCANCODE FOR LOCK KEY");
@@ -194,6 +195,60 @@ static void toggle_lock_key(uint8_t scancode)
     toggle_bitb(&kb_state.lock_keys, key);
 
     set_keyboard_leds(kb_state.lock_keys);
+}
+
+static inline int is_modifier_key(uint8_t scancode)
+{
+    switch (scancode)
+    {
+        case LEFT_SHIFT:
+        case RIGHT_SHIFT:
+        case ALT:
+        case CTRL:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+static inline uint8_t get_modifier_key_flag(uint8_t scancode)
+{
+    uint8_t bit;
+    
+    switch (scancode)
+    {
+        case CTRL:
+            bit = MODKEY_CTRL;
+            break;
+        case ALT:
+            bit = MODKEY_ALT;
+            break;
+        case RIGHT_SHIFT:
+        case LEFT_SHIFT:
+            bit = MODKEY_SHIFT;
+            break;
+        default:
+            BUG("INVALID MODIFIER KEY");
+            return -1;
+    }
+
+    return bit;
+}
+
+static void set_modifier_key_flag(uint8_t scancode)
+{
+    uint8_t bit;
+
+    bit = get_modifier_key_flag(scancode);
+    set_bitb(&kb_state.modifier_keys, bit);
+}
+
+static void unset_modifier_key_flag(uint8_t scancode)
+{
+    uint8_t bit;
+
+    bit = get_modifier_key_flag(scancode);
+    unset_bitb(&kb_state.modifier_keys, bit);
 }
 
 static void handle_keyboard(struct registers *regs)
@@ -207,9 +262,23 @@ static void handle_keyboard(struct registers *regs)
     {
         v = scancode_table[scancode];
         if (v)
+        {
+            if (isalpha(v) && (check_bitb(&kb_state.modifier_keys, MODKEY_SHIFT) ||
+                               check_bitb(&kb_state.lock_keys, CAPS_LOCK_BIT)))
+                v = toupper(v);
             printk("%c", v);
+        }
         else if (is_lock_key(scancode))
             toggle_lock_key(scancode);
+        else if (is_modifier_key(scancode))
+            set_modifier_key_flag(scancode);
+    }
+    else
+    {
+        unset_bitb(&scancode, 7);
+    
+        if (is_modifier_key(scancode))
+            unset_modifier_key_flag(scancode);
     }
 }
 
