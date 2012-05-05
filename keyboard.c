@@ -163,14 +163,14 @@ static inline int is_lock_key(uint8_t scancode)
     }
 }
 
-static void set_keyboard_leds(uint8_t lock_keys)
+static inline void set_keyboard_leds(uint8_t lock_keys)
 {
     outportb(KEYBOARD_DATA_PORT, KEYBOARD_SET_LEDS);
     keyboard_wait_ack();
     outportb(KEYBOARD_DATA_PORT, lock_keys);
 }
 
-static void toggle_lock_key(uint8_t scancode)
+static inline void toggle_lock_key(uint8_t scancode)
 {
     uint8_t key;
 
@@ -233,7 +233,7 @@ static inline uint8_t get_modifier_key_flag(uint8_t scancode)
     return bit;
 }
 
-static void set_modifier_key_flag(uint8_t scancode)
+static inline void set_modifier_key_flag(uint8_t scancode)
 {
     uint8_t bit;
 
@@ -241,7 +241,7 @@ static void set_modifier_key_flag(uint8_t scancode)
     set_bitb(&kb_state.modifier_keys, bit);
 }
 
-static void unset_modifier_key_flag(uint8_t scancode)
+static inline void unset_modifier_key_flag(uint8_t scancode)
 {
     uint8_t bit;
 
@@ -249,7 +249,7 @@ static void unset_modifier_key_flag(uint8_t scancode)
     unset_bitb(&kb_state.modifier_keys, bit);
 }
 
-static char num_to_symbol(char c)
+static inline char num_to_symbol(char c)
 {
     return numeric_symbols[c - '0'];
 }
