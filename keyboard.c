@@ -140,6 +140,7 @@ static inline void keyboard_wait_ack()
 {
     while (inportb(KEYBOARD_DATA_PORT) != KEYBOARD_ACKNOWLEDGE);
 }
+
 static inline void disable_keyboard()
 {
     outportb(KEYBOARD_CMD_PORT, KEYBOARD_DISABLE);
