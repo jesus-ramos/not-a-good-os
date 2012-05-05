@@ -17,6 +17,14 @@ enum lock_key_bits
     CAPS_LOCK_BIT
 };
 
+#define CTRL_SET  (1 << MODKEY_CTRL)
+#define ALT_SET   (1 << MODKEY_ALT)
+#define SHIFT_SET (1 << MODKEY_SHIFT)
+
+#define SCROLL_LOCK_ON (1 << SCROLL_LOCK_BIT)
+#define NUM_LOCK_ON    (1 << NUM_LOCK_BIT)
+#define CAPS_LOCK_ON   (1 << CAPS_LOCK_BIT) 
+
 struct keypress_data
 {
     uint8_t scancode;

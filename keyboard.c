@@ -20,26 +20,29 @@
 #define KEYBOARD_DISABLE 0xAD
 #define KEYBOARD_ENABLE  0xAE
 
+#define KEYBOARD_ACKNOWLEDGE 0xFA
+#define KEYBOARD_RESEND      0xFE
+
 #define ESCAPE      0x01
 #define CTRL        0x1D
 #define LEFT_SHIFT  0x2A
 #define RIGHT_SHIFT 0x36
 #define ALT         0x38
 #define CAPS_LOCK   0x3A
-#define KEY_F1      0x3B
-#define KEY_F2      0x3C
-#define KEY_F3      0x3D
-#define KEY_F4      0x3E
-#define KEY_F5      0x3F
-#define KEY_F6      0x40
-#define KEY_F7      0x41
-#define KEY_F8      0x42
-#define KEY_F9      0x43
-#define KEY_F10     0x44
+#define F1          0x3B
+#define F2          0x3C
+#define F3          0x3D
+#define F4          0x3E
+#define F5          0x3F
+#define F6          0x40
+#define F7          0x41
+#define F8          0x42
+#define F9          0x43
+#define F10         0x44
 #define NUM_LOCK    0x45
 #define SCROLL_LOCK 0x46
-#define KEY_F11     0x57
-#define KEY_F12     0x58
+#define F11         0x57
+#define F12         0x58
 
 #define KEY_EXTEND_BYTE 0xE0
 
@@ -49,7 +52,6 @@ struct keyboard_state
     uint8_t lock_keys;
 };
 
-/* Standard EN-US Keyboard */
 char scancode_table[] =
 {
     [0x02] = '1',
@@ -125,6 +127,8 @@ char scancode_table[] =
     [0x53] = '.'
 };
 
+static char numeric_symbols[] = { ')', '!', '@', '#', '$', '%', '^', '&', '*', '(' };
+
 struct keyboard_state kb_state;
 
 static inline void keyboard_wait()
@@ -132,26 +136,18 @@ static inline void keyboard_wait()
     while (inportb(KEYBOARD_DATA_PORT) & KEYBOARD_BUSY);
 }
 
-static inline void send_data(uint8_t data)
+static inline void keyboard_wait_ack()
 {
-    keyboard_wait();
-    outportb(KEYBOARD_DATA_PORT, data);
+    while (inportb(KEYBOARD_DATA_PORT) != KEYBOARD_ACKNOWLEDGE);
 }
-
-static inline void send_cmd(uint8_t cmd)
-{
-    keyboard_wait();
-    outportb(KEYBOARD_CMD_PORT, cmd);
-}
-
 static inline void disable_keyboard()
 {
-    send_cmd(KEYBOARD_DISABLE);
+    outportb(KEYBOARD_CMD_PORT, KEYBOARD_DISABLE);
 }
 
 static inline void enable_keyboard()
 {
-    send_cmd(KEYBOARD_ENABLE);
+    outportb(KEYBOARD_CMD_PORT, KEYBOARD_ENABLE);
 }
 
 static inline int is_lock_key(uint8_t scancode)
@@ -169,7 +165,9 @@ static inline int is_lock_key(uint8_t scancode)
 
 static void set_keyboard_leds(uint8_t lock_keys)
 {
-    /* TODO */
+    outportb(KEYBOARD_DATA_PORT, KEYBOARD_SET_LEDS);
+    keyboard_wait_ack();
+    outportb(KEYBOARD_DATA_PORT, lock_keys);
 }
 
 static void toggle_lock_key(uint8_t scancode)
@@ -251,6 +249,11 @@ static void unset_modifier_key_flag(uint8_t scancode)
     unset_bitb(&kb_state.modifier_keys, bit);
 }
 
+static char num_to_symbol(char c)
+{
+    return numeric_symbols[c - '0'];
+}
+
 static void handle_keyboard(struct registers *regs)
 {
     uint8_t scancode;
@@ -263,9 +266,11 @@ static void handle_keyboard(struct registers *regs)
         v = scancode_table[scancode];
         if (v)
         {
-            if (isalpha(v) && (check_bitb(&kb_state.modifier_keys, MODKEY_SHIFT) ||
-                               check_bitb(&kb_state.lock_keys, CAPS_LOCK_BIT)))
+            if (isalpha(v) && ((kb_state.modifier_keys & SHIFT_SET) ||
+                               (kb_state.lock_keys & CAPS_LOCK_ON)))
                 v = toupper(v);
+            if (isdigit(v) && (kb_state.modifier_keys & SHIFT_SET))
+                v = num_to_symbol(v);
             printk("%c", v);
         }
         else if (is_lock_key(scancode))
