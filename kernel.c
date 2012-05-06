@@ -13,6 +13,7 @@ int kinit()
     init_descriptor_tables();
     init_paging();
     init_keyboard();
+    
     enable_interrupts();
     
     return 0;
@@ -24,7 +25,7 @@ int kmain(void *mbd, unsigned int magic)
         PANIC("BAD MAGIC VALUE FROM BOOTLOADER!!!");
 
     kinit();
-    
+
     while (1);
     
     return 0;

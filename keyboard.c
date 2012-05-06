@@ -275,8 +275,8 @@ static void handle_keyboard(struct registers *regs)
             if (isalpha(v) && ((kb_state.modifier_keys & SHIFT_SET) ||
                                (kb_state.lock_keys & CAPS_LOCK_ON)))
                 v = toupper(v);
-            if (isdigit(v) && !is_keypad_key(scancode) &&
-                (kb_state.modifier_keys & SHIFT_SET))
+            else if (isdigit(v) && !is_keypad_key(scancode) &&
+                     (kb_state.modifier_keys & SHIFT_SET))
                 v = num_to_symbol(v);
             printk("%c", v);
         }

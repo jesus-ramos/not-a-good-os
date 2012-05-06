@@ -1,4 +1,5 @@
 #include <kernel/string.h>
+#include <kernel/types.h>
 
 /* Uncomment to use non-optimized versions */
 /* #define USE_GENERIC */
