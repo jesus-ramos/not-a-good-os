@@ -42,4 +42,4 @@ clean :
 	-rm $(TARGET) $(OBJS) $(ASOBJS)
 
 mrproper : clean
-	-rm .depend
+	-rm .depend TAGS
