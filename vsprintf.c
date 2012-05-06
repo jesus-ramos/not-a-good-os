@@ -161,10 +161,12 @@ int vsprintf(char *buf, const char *fmt, va_list args)
                 while (--field_width > 0)
                     *str++ = ' ';
                 break;
+                
             case 's':
                 s = va_arg(args, char *);
                 if (!s)
                     s = "NULL";
+                
                 len = strlen(s);
                 if (precision < 0)
                     precision = len;
@@ -179,25 +181,29 @@ int vsprintf(char *buf, const char *fmt, va_list args)
                 while (len < field_width--)
                     *str++ = ' ';
                 break;
+                
             case 'o':
                 str = num_to_base(str, va_arg(args, unsigned long),
                                   8, field_width, precision, flags);
                 break;
+                
             case 'p':
                 if (field_width == -1)
                 {
                     field_width = 8;
                     flags |= PAD_ZEROES;
                 }
-                str = num_to_base(str, (unsigned long)va_arg(args, void*),
+                str = num_to_base(str, (unsigned long)va_arg(args, void *),
                                   16, field_width, precision, flags);
                 break;
+                
             case 'x':
                 flags |= LOWER_CASE;
             case 'X':
                 str = num_to_base(str, va_arg(args, unsigned long),
                                   16, field_width, precision, flags);
                 break;
+                
             case 'd':
             case 'i':
                 flags |= SIGNED;
@@ -205,10 +211,12 @@ int vsprintf(char *buf, const char *fmt, va_list args)
                 str = num_to_base(str, va_arg(args, unsigned long),
                                   10, field_width, precision, flags);
                 break;
+                
             case 'n':
                 ip = va_arg(args, int *);
                 *ip = (str - buf);
                 break;
+                
             default:
                 if (*fmt != '%')
                     *str++ = '%';
@@ -219,7 +227,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
                 break;
         }
     }
-
+    
     *str = '\0';
 
     return str - buf;

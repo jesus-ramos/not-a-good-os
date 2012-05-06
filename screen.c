@@ -28,6 +28,7 @@ static void fb_move_cursor()
     uint16_t cursor_loc;
 
     cursor_loc = cursor_y * 80 + cursor_x;
+    
     outportb(VGA_CMD, VGA_HIGH_BYTE);
     outportb(VGA_DATA, cursor_loc >> 8);
     outportb(VGA_CMD, VGA_LOW_BYTE);

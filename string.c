@@ -34,12 +34,11 @@ void *memset(void *s, char c, size_t count)
 
 size_t strlen(const char *s)
 {
-    size_t len = 0;
+    const char *sc;
 
-    while (*s++)
-        len++;
+    for (sc = s; *sc; sc++);
 
-    return len;
+    return sc - s;
 }
 
 static int __strcmp(const char *s1, const char *s2, size_t n)
