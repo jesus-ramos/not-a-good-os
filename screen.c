@@ -3,8 +3,8 @@
 
 #include <asm/port_comm.h>
 
-#define VGA_TELL      0x3D4
-#define VGA_SEND      0x3D5
+#define VGA_CMD      0x3D4
+#define VGA_DATA      0x3D5
 #define VGA_HIGH_BYTE 14
 #define VGA_LOW_BYTE  15
 
@@ -28,10 +28,10 @@ static void fb_move_cursor()
     uint16_t cursor_loc;
 
     cursor_loc = cursor_y * 80 + cursor_x;
-    outportb(VGA_TELL, VGA_HIGH_BYTE);
-    outportb(VGA_SEND, cursor_loc >> 8);
-    outportb(VGA_TELL, VGA_LOW_BYTE);
-    outportb(VGA_SEND, cursor_loc);
+    outportb(VGA_CMD, VGA_HIGH_BYTE);
+    outportb(VGA_DATA, cursor_loc >> 8);
+    outportb(VGA_CMD, VGA_LOW_BYTE);
+    outportb(VGA_DATA, cursor_loc);
 }
 
 static void fb_scroll()

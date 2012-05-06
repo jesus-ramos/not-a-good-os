@@ -1,9 +1,9 @@
 CC      = gcc
-CFLAGS	= -Wall -m32 -I./include/ -nostdlib -fno-builtin -nostartfiles -nodefaultlibs
+CFLAGS	= -Wall -m32 -I./include/ -nostdlib -fno-builtin -nostartfiles -nodefaultlibs -O3
 LDFLAGS = -melf_i386 -T linker.ld
 LD 	= ld
 AS	= nasm
-ASFLAGS = -f elf
+ASFLAGS = -f elf -Ox
 
 TARGET  = kernel.bin
 SRCS 	= kernel.c screen.c string.c desc_tables.c isr.c timer.c \

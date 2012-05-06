@@ -250,6 +250,11 @@ static inline void unset_modifier_key_flag(uint8_t scancode)
     unset_bitb(&kb_state.modifier_keys, bit);
 }
 
+static inline int is_keypad_key(uint8_t scancode)
+{
+    return (scancode >= 0x47 && scancode <= 0x53) || scancode == 0x37;
+}
+
 static inline char num_to_symbol(char c)
 {
     return numeric_symbols[c - '0'];
@@ -270,7 +275,8 @@ static void handle_keyboard(struct registers *regs)
             if (isalpha(v) && ((kb_state.modifier_keys & SHIFT_SET) ||
                                (kb_state.lock_keys & CAPS_LOCK_ON)))
                 v = toupper(v);
-            if (isdigit(v) && (kb_state.modifier_keys & SHIFT_SET))
+            if (isdigit(v) && !is_keypad_key(scancode) &&
+                (kb_state.modifier_keys & SHIFT_SET))
                 v = num_to_symbol(v);
             printk("%c", v);
         }

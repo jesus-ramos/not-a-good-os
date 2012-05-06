@@ -10,8 +10,6 @@ void isr_handler(struct registers regs)
 {
     isr_t handler;
     
-    printk("Received interrupt: %u\n", regs.int_num);
-
     if (interrupt_handlers[regs.int_num])
     {
         handler = interrupt_handlers[regs.int_num];
