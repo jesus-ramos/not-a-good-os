@@ -11,17 +11,16 @@
 
 #define KEY_RELEASED (1 << 7)
 
-#define KEYBOARD_DATA_PORT 0x60
-#define KEYBOARD_CMD_PORT  0x64
-
-#define KEYBOARD_BUSY     0x02
-#define KEYBOARD_SET_LEDS 0xED
-
-#define KEYBOARD_DISABLE 0xAD
-#define KEYBOARD_ENABLE  0xAE
-
+#define KEYBOARD_DATA_PORT   0x60
+#define KEYBOARD_CMD_PORT    0x64
+#define KEYBOARD_BUSY        0x02
+#define KEYBOARD_SET_LEDS    0xED
+#define KEYBOARD_DISABLE     0xAD
+#define KEYBOARD_ENABLE      0xAE
 #define KEYBOARD_ACKNOWLEDGE 0xFA
 #define KEYBOARD_RESEND      0xFE
+
+#define KEY_EXTEND_BYTE 0xE0
 
 #define ESCAPE      0x01
 #define CTRL        0x1D
@@ -43,8 +42,6 @@
 #define SCROLL_LOCK 0x46
 #define F11         0x57
 #define F12         0x58
-
-#define KEY_EXTEND_BYTE 0xE0
 
 struct keyboard_state
 {
@@ -127,7 +124,7 @@ char scancode_table[] =
     [0x53] = '.'
 };
 
-static char numeric_symbols[] = { ')', '!', '@', '#', '$', '%', '^', '&', '*', '(' };
+char numeric_symbols[] = { '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+' };
 
 struct keyboard_state kb_state;
 
@@ -196,6 +193,11 @@ static inline void toggle_lock_key(uint8_t scancode)
     set_keyboard_leds(kb_state.lock_keys);
 }
 
+static inline int is_numeric_row_key(uint8_t scancode)
+{
+    return (scancode >= 0x02 && scancode <= 0x0D) || scancode == 0x29;
+}
+
 static inline int is_modifier_key(uint8_t scancode)
 {
     switch (scancode)
@@ -228,7 +230,7 @@ static inline uint8_t get_modifier_key_flag(uint8_t scancode)
             break;
         default:
             BUG("INVALID MODIFIER KEY");
-            return -1;
+            return 0;
     }
 
     return bit;
@@ -255,9 +257,13 @@ static inline int is_keypad_key(uint8_t scancode)
     return (scancode >= 0x47 && scancode <= 0x53) || scancode == 0x37;
 }
 
-static inline char num_to_symbol(char c)
+static inline char numeric_row_apply_shift(uint8_t scancode)
 {
-    return numeric_symbols[c - '0'];
+    int index;
+
+    index = (scancode == 0x29) ? 0 : scancode - 1;
+        
+    return numeric_symbols[index];
 }
 
 static void handle_keyboard(struct registers *regs)
@@ -275,9 +281,10 @@ static void handle_keyboard(struct registers *regs)
             if (isalpha(v) && ((kb_state.modifier_keys & SHIFT_SET) ||
                                (kb_state.lock_keys & CAPS_LOCK_ON)))
                 v = toupper(v);
-            else if (isdigit(v) && !is_keypad_key(scancode) &&
+            else if (is_numeric_row_key(scancode) && !is_keypad_key(scancode) &&
                      (kb_state.modifier_keys & SHIFT_SET))
-                v = num_to_symbol(v);
+                v = numeric_row_apply_shift(scancode);
+            
             printk("%c", v);
         }
         else if (is_lock_key(scancode))

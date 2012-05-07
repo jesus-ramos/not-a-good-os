@@ -1,10 +1,11 @@
 #include <kernel/string.h>
-#include <kernel/types.h>
 
 /* Uncomment to use non-optimized versions */
 /* #define USE_GENERIC */
 
 #ifdef USE_GENERIC
+
+#include <kernel/types.h>
 
 void *memcpy(void *dest, const void *src, size_t count)
 {

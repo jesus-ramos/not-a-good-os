@@ -26,9 +26,7 @@ int kmain(void *mbd, unsigned int magic)
 
     kinit();
 
-    printk("test");
-
     while (1);
-    
+
     return 0;
 }

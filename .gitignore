@@ -3,3 +3,4 @@ kernel.bin
 .depend
 .zcache
 TAGS
+kernel.syms

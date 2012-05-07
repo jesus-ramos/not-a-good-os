@@ -1,12 +1,13 @@
 CC      = gcc
 CFLAGS	= -Wall -m32 -I./include/ -nostdlib -fno-builtin -nostartfiles \
-	  -nodefaultlibs -mno-sse -O3
+	  -nodefaultlibs -mno-sse -O3 -g
 LDFLAGS = -melf_i386 -T linker.ld
 LD 	= ld
 AS	= nasm
 ASFLAGS = -f elf -Ox
 
 TARGET  = kernel.bin
+SYMS	= kernel.syms
 SRCS 	= kernel.c screen.c string.c desc_tables.c isr.c timer.c \
 	  vsprintf.c printk.c keyboard.c paging.c panic.c
 ASSRCS  = loader.s gdt.s interrupt.s
@@ -27,6 +28,8 @@ include .depend
 
 $(TARGET) : $(OBJS) $(ASOBJS) linker.ld
 	$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS)
+	objcopy --only-keep-debug $(TARGET) $(SYMS)
+	objcopy --strip-debug $(TARGET)
 
 .c.o :
 	$(CC) $(CFLAGS) -c $<
@@ -39,7 +42,7 @@ TAGS : FORCE
 
 .PHONY : clean FORCE mrproper
 clean :
-	-rm $(TARGET) $(OBJS) $(ASOBJS)
+	-rm $(TARGET) $(OBJS) $(ASOBJS) $(SYMS)
 
 mrproper : clean
 	-rm .depend TAGS
