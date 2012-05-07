@@ -4,7 +4,7 @@
 
 #include <asm/div.h>
 
-#define PAD_ZEROES     (1)
+#define PAD_ZEROES     (1 << 0)
 #define SIGNED         (1 << 1)
 #define PLUS           (1 << 2)
 #define SPACE          (1 << 3)
