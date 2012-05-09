@@ -22,34 +22,13 @@
 
 #define KEY_EXTEND_BYTE 0xE0
 
-#define ESCAPE      0x01
-#define CTRL        0x1D
-#define LEFT_SHIFT  0x2A
-#define RIGHT_SHIFT 0x36
-#define ALT         0x38
-#define CAPS_LOCK   0x3A
-#define F1          0x3B
-#define F2          0x3C
-#define F3          0x3D
-#define F4          0x3E
-#define F5          0x3F
-#define F6          0x40
-#define F7          0x41
-#define F8          0x42
-#define F9          0x43
-#define F10         0x44
-#define NUM_LOCK    0x45
-#define SCROLL_LOCK 0x46
-#define F11         0x57
-#define F12         0x58
-
 struct keyboard_state
 {
     uint8_t modifier_keys;
     uint8_t lock_keys;
 };
 
-char scancode_table[] =
+static char scancode_table[] =
 {
     [0x02] = '1',
     [0x03] = '2',
@@ -124,9 +103,11 @@ char scancode_table[] =
     [0x53] = '.'
 };
 
-char numeric_symbols[] = { '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+' };
+static char numeric_symbols[] = { '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+' };
 
 struct keyboard_state kb_state;
+
+keyboard_handler_t keyboard_handler;
 
 static inline void keyboard_wait()
 {
@@ -193,25 +174,6 @@ static inline void toggle_lock_key(uint8_t scancode)
     set_keyboard_leds(kb_state.lock_keys);
 }
 
-static inline int is_numeric_row_key(uint8_t scancode)
-{
-    return (scancode >= 0x02 && scancode <= 0x0D) || scancode == 0x29;
-}
-
-static inline int is_modifier_key(uint8_t scancode)
-{
-    switch (scancode)
-    {
-        case LEFT_SHIFT:
-        case RIGHT_SHIFT:
-        case ALT:
-        case CTRL:
-            return 1;
-        default:
-            return 0;
-    }
-}
-
 static inline uint8_t get_modifier_key_flag(uint8_t scancode)
 {
     uint8_t bit;
@@ -252,11 +214,6 @@ static inline void unset_modifier_key_flag(uint8_t scancode)
     unset_bitb(&kb_state.modifier_keys, bit);
 }
 
-static inline int is_keypad_key(uint8_t scancode)
-{
-    return (scancode >= 0x47 && scancode <= 0x53) || scancode == 0x37;
-}
-
 static inline char numeric_row_apply_shift(uint8_t scancode)
 {
     int index;
@@ -271,6 +228,7 @@ static void handle_keyboard(struct registers *regs)
     uint8_t scancode;
     char v;
 
+    
     send_eoi();
     scancode = inportb(KEYBOARD_DATA_PORT);
     if (!(scancode & KEY_RELEASED))
@@ -284,6 +242,9 @@ static void handle_keyboard(struct registers *regs)
             else if (is_numeric_row_key(scancode) && !is_keypad_key(scancode) &&
                      (kb_state.modifier_keys & SHIFT_SET))
                 v = numeric_row_apply_shift(scancode);
+            else if (isdigit(v) && is_keypad_key(scancode) &&
+                     !(kb_state.lock_keys & NUM_LOCK_ON))
+                v = '\0';
             
             printk("%c", v);
         }
