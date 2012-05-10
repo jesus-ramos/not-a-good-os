@@ -22,12 +22,6 @@
 
 #define KEY_EXTEND_BYTE 0xE0
 
-struct keyboard_state
-{
-    uint8_t modifier_keys;
-    uint8_t lock_keys;
-};
-
 static char scancode_table[] =
 {
     [0x02] = '1',
@@ -107,7 +101,7 @@ static char numeric_symbols[] = { '~', '!', '@', '#', '$', '%', '^', '&', '*', '
 
 struct keyboard_state kb_state;
 
-keyboard_handler_t keyboard_handler;
+static keyboard_handler_t keyboard_handler;
 
 static inline void keyboard_wait()
 {
@@ -227,13 +221,12 @@ static void handle_keyboard(struct registers *regs)
 {
     uint8_t scancode;
     char v;
-
     
     send_eoi();
     scancode = inportb(KEYBOARD_DATA_PORT);
+            v = scancode_table[scancode];
     if (!(scancode & KEY_RELEASED))
     {
-        v = scancode_table[scancode];
         if (v)
         {
             if (isalpha(v) && ((kb_state.modifier_keys & SHIFT_SET) ||
@@ -267,4 +260,9 @@ void init_keyboard()
     memset(&kb_state, 0, sizeof(struct keyboard_state));
     
     register_interrupt_handler(KEYBOARD_IRQ, handle_keyboard);
+}
+
+void register_keyboard_handler(keyboard_handler_t handler)
+{
+    keyboard_handler = handler;
 }

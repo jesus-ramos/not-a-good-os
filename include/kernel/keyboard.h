@@ -46,19 +46,26 @@ enum lock_key_bits
 #define F11         0x57
 #define F12         0x58
 
+struct keyboard_state
+{
+    uint8_t modifier_keys;
+    uint8_t lock_keys;
+};
+
 struct keypress_data
 {
     uint8_t scancode;
     char key;
     uint8_t released;
-    uint8_t modifier_keys;
-    uint8_t lock_keys;
+    struct keyboard_state kb_state;
 };
 
 typedef void (*keyboard_handler_t)(struct keypress_data *);
 
 void init_keyboard();
 void register_keyboard_handler(keyboard_handler_t handler);
+
+extern struct keyboard_state kb_state;
 
 static inline int is_keypad_key(uint8_t scancode)
 {
