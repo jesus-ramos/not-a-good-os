@@ -5,9 +5,9 @@
 
 #define ENABLE_PAGING_FLAG 0x80000000
 
-static inline uint32_t get_faulting_address()
+static inline unsigned long get_faulting_address()
 {
-    uint32_t faulting_address;
+    unsigned long faulting_address;
     
     asm volatile ("mov %%cr2, %0" : "=r" (faulting_address));
 

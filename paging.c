@@ -7,7 +7,15 @@
 
 void handle_page_fault(struct registers *regs)
 {
-    PANIC("HAVEN'T IMPLEMENTED PAGING YET!!!");
+    unsigned long address;
+
+    address = get_faulting_address();
+
+    printk("Page fault\n"
+           "Address: %lu\n"
+           "Flags: 0x%X\n",
+           address, regs->err);
+    PANIC("PAGING NOT IMPLEMENTED YET");
 }
 
 void init_paging()

@@ -219,40 +219,46 @@ static inline char numeric_row_apply_shift(uint8_t scancode)
 
 static void handle_keyboard(struct registers *regs)
 {
-    uint8_t scancode;
-    char v;
+    struct keyevent_data keyevent;
+
+    if (!keyboard_handler)
+        return;
     
     send_eoi();
-    scancode = inportb(KEYBOARD_DATA_PORT);
-            v = scancode_table[scancode];
-    if (!(scancode & KEY_RELEASED))
+    keyevent.scancode = inportb(KEYBOARD_DATA_PORT);
+    keyevent.key = scancode_table[keyevent.scancode];
+    if (!(keyevent.scancode & KEY_RELEASED))
     {
-        if (v)
+        keyevent.released = 0;
+        if (keyevent.key)
         {
-            if (isalpha(v) && ((kb_state.modifier_keys & SHIFT_SET) ||
+            if (isalpha(keyevent.key) && ((kb_state.modifier_keys & SHIFT_SET) ||
                                (kb_state.lock_keys & CAPS_LOCK_ON)))
-                v = toupper(v);
-            else if (is_numeric_row_key(scancode) && !is_keypad_key(scancode) &&
+                keyevent.key = toupper(keyevent.key);
+            else if (is_numeric_row_key(keyevent.scancode) &&
+                     !is_keypad_key(keyevent.scancode) &&
                      (kb_state.modifier_keys & SHIFT_SET))
-                v = numeric_row_apply_shift(scancode);
-            else if (isdigit(v) && is_keypad_key(scancode) &&
+                keyevent.key = numeric_row_apply_shift(keyevent.scancode);
+            else if (isdigit(keyevent.key) && is_keypad_key(keyevent.scancode) &&
                      !(kb_state.lock_keys & NUM_LOCK_ON))
-                v = '\0';
-            
-            printk("%c", v);
+                keyevent.key = '\0';
         }
-        else if (is_lock_key(scancode))
-            toggle_lock_key(scancode);
-        else if (is_modifier_key(scancode))
-            set_modifier_key_flag(scancode);
+        else if (is_lock_key(keyevent.scancode))
+            toggle_lock_key(keyevent.scancode);
+        else if (is_modifier_key(keyevent.scancode))
+            set_modifier_key_flag(keyevent.scancode);
     }
     else
     {
-        unset_bitb(&scancode, 7);
+        keyevent.released = 1;
+        unset_bitb(&keyevent.scancode, 7);
     
-        if (is_modifier_key(scancode))
-            unset_modifier_key_flag(scancode);
+        if (is_modifier_key(keyevent.scancode))
+            unset_modifier_key_flag(keyevent.scancode);
     }
+    keyevent.kb_state = kb_state;
+
+    keyboard_handler(&keyevent);
 }
 
 void init_keyboard()

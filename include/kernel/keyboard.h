@@ -52,7 +52,7 @@ struct keyboard_state
     uint8_t lock_keys;
 };
 
-struct keypress_data
+struct keyevent_data
 {
     uint8_t scancode;
     char key;
@@ -60,7 +60,7 @@ struct keypress_data
     struct keyboard_state kb_state;
 };
 
-typedef void (*keyboard_handler_t)(struct keypress_data *);
+typedef void (*keyboard_handler_t)(const struct keyevent_data *);
 
 void init_keyboard();
 void register_keyboard_handler(keyboard_handler_t handler);

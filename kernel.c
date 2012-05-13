@@ -1,3 +1,4 @@
+#include <kernel/console.h>
 #include <kernel/keyboard.h>
 #include <kernel/paging.h>
 #include <kernel/panic.h>
@@ -13,6 +14,7 @@ int kinit()
     init_descriptor_tables();
     init_paging();
     init_keyboard();
+    init_console();
     
     enable_interrupts();
     
