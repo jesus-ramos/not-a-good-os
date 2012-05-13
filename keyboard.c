@@ -9,7 +9,8 @@
 
 #define KEYBOARD_IRQ IRQ1
 
-#define KEY_RELEASED (1 << 7)
+#define KEY_RELEASED_BIT 7
+#define KEY_RELEASED     (1 << KEY_RELEASED_BIT)
 
 #define KEYBOARD_DATA_PORT   0x60
 #define KEYBOARD_CMD_PORT    0x64
@@ -226,10 +227,13 @@ static void handle_keyboard(struct registers *regs)
     
     send_eoi();
     keyevent.scancode = inportb(KEYBOARD_DATA_PORT);
+    keyevent.released = keyevent.scancode & KEY_RELEASED;
+    if (keyevent.released)
+        unset_bitb(&keyevent.scancode, KEY_RELEASED_BIT);
     keyevent.key = scancode_table[keyevent.scancode];
-    if (!(keyevent.scancode & KEY_RELEASED))
+
+    if (!keyevent.released)
     {
-        keyevent.released = 0;
         if (keyevent.key)
         {
             if (isalpha(keyevent.key) && ((kb_state.modifier_keys & SHIFT_SET) ||
@@ -248,14 +252,9 @@ static void handle_keyboard(struct registers *regs)
         else if (is_modifier_key(keyevent.scancode))
             set_modifier_key_flag(keyevent.scancode);
     }
-    else
-    {
-        keyevent.released = 1;
-        unset_bitb(&keyevent.scancode, 7);
-    
-        if (is_modifier_key(keyevent.scancode))
-            unset_modifier_key_flag(keyevent.scancode);
-    }
+    else if (is_modifier_key(keyevent.scancode))
+        unset_modifier_key_flag(keyevent.scancode);
+
     keyevent.kb_state = kb_state;
 
     keyboard_handler(&keyevent);

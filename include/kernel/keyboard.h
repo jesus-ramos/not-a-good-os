@@ -91,4 +91,10 @@ static inline int is_modifier_key(uint8_t scancode)
     }
 }
 
+static inline int is_function_key(uint8_t scancode)
+{
+    return (scancode >= 0x3B && scancode <= 0x44) ||
+        scancode == 0x57 || scancode == 0x58;
+}
+
 #endif /* _KEYBOARD_H */
