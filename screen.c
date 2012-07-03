@@ -3,7 +3,7 @@
 
 #include <asm/port_comm.h>
 
-#define VGA_CMD      0x3D4
+#define VGA_CMD       0x3D4
 #define VGA_DATA      0x3D5
 #define VGA_HIGH_BYTE 14
 #define VGA_LOW_BYTE  15

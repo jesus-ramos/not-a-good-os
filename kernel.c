@@ -8,9 +8,12 @@
 #include <asm/asm_common.h>
 #include <asm/desc_tables.h>
 
+#include "multiboot.h"
+
+unsigned long total_mem;
+
 int kinit()
 {
-    fb_clear();
     init_descriptor_tables();
     init_paging();
     init_keyboard();
@@ -21,11 +24,21 @@ int kinit()
     return 0;
 }
 
-int kmain(void *mbd, unsigned int magic)
+int kmain(struct multiboot_info *mbd, unsigned int magic)
 {
-    if (magic != 0x2BADB002)
+    fb_clear();
+    
+    if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
         PANIC("BAD MAGIC VALUE FROM BOOTLOADER!!!");
 
+    if (mbd->flags & 1)
+    {
+        total_mem = mbd->mem_lower + mbd->mem_upper;
+        printk("Booting with: %u kb of memory\n", total_mem);
+    }
+    else
+        PANIC("COULD NOT DETERMINE MEMORY SIZE\n");
+    
     kinit();
 
     while (1);

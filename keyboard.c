@@ -222,10 +222,11 @@ static void handle_keyboard(struct registers *regs)
 {
     struct keyevent_data keyevent;
 
+    send_eoi();
+    
     if (!keyboard_handler)
         return;
     
-    send_eoi();
     keyevent.scancode = inportb(KEYBOARD_DATA_PORT);
     keyevent.released = keyevent.scancode & KEY_RELEASED;
     if (keyevent.released)
