@@ -1,4 +1,6 @@
 *.o
+*.d.*
+*.d
 kernel.bin
 .depend
 .zcache

@@ -17,13 +17,14 @@ ASOBJS  = ${ASSRCS:.s=.o}
 .SUFFIXES :
 .SUFFIXES : .o .c .s
 
+-include $(subst .c,.d,$(SRCS))
+
 all : $(TARGET)
 
-.depend : $(SRCS)
-	@echo "DEPEND"
-	@$(CC) $(CFLAGS) -MM $^ > .depend
-
-include .depend
+%.d : %.c
+	@$(CC) -M $(CFLAGS) $< > $@.$$$$; 			\
+	@sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@;	\
+	-@rm -f $@.$$$$
 
 $(TARGET) : $(OBJS) $(ASOBJS) linker.ld
 	@echo "LD: $(TARGET)"
