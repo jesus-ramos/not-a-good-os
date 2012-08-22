@@ -1,7 +1,7 @@
 #include <kernel/screen.h>
 #include <kernel/types.h>
 
-#include <asm/port_comm.h>
+#include <asm/common.h>
 
 #define VGA_CMD       0x3D4
 #define VGA_DATA      0x3D5

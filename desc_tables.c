@@ -1,8 +1,8 @@
 #include <kernel/string.h>
 
+#include <asm/common.h>
 #include <asm/desc_tables.h>
 #include <asm/interrupt.h>
-#include <asm/port_comm.h>
 
 /* Defined in gdt.s */
 extern void gdt_flush(uint32_t gdt_ptr);

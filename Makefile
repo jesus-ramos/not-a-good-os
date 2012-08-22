@@ -15,8 +15,6 @@ OBJS	= ${SRCS:.c=.o}
 ASOBJS  = ${ASSRCS:.s=.o}
 DEPS 	= ${SRCS:.c=.d}
 
-
-
 .SUFFIXES :
 .SUFFIXES : .o .c .s
 

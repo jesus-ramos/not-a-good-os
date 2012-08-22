@@ -1,8 +1,8 @@
 #include <kernel/stdio.h>
 #include <kernel/timer.h>
 
+#include <asm/common.h>
 #include <asm/interrupt.h>
-#include <asm/port_comm.h>
 
 uint32_t tick = 0;
 

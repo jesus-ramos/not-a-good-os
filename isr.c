@@ -1,8 +1,8 @@
 #include <kernel/stdio.h>
 
+#include <asm/common.h>
 #include <asm/desc_tables.h>
 #include <asm/interrupt.h>
-#include <asm/port_comm.h>
 
 isr_t interrupt_handlers[256];
 
