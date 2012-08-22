@@ -13,18 +13,14 @@ SRCS 	= kernel.c screen.c string.c desc_tables.c isr.c timer.c \
 ASSRCS  = loader.s gdt.s interrupt.s
 OBJS	= ${SRCS:.c=.o}
 ASOBJS  = ${ASSRCS:.s=.o}
+DEPS 	= ${SRCS:.c=.d}
+
+
 
 .SUFFIXES :
 .SUFFIXES : .o .c .s
 
--include $(subst .c,.d,$(SRCS))
-
 all : $(TARGET)
-
-%.d : %.c
-	@$(CC) -M $(CFLAGS) $< > $@.$$$$; 			\
-	@sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@;	\
-	-@rm -f $@.$$$$
 
 $(TARGET) : $(OBJS) $(ASOBJS) linker.ld
 	@echo "LD: $(TARGET)"
@@ -42,13 +38,20 @@ $(TARGET) : $(OBJS) $(ASOBJS) linker.ld
 	@echo "AS: $<"
 	@$(AS) $(ASFLAGS) -o $@ $<
 
+%.d : %.c
+	@$(CC) -M $(CFLAGS) $< > $@.$$$$;			\
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; 	\
+	rm -f $@.$$$$
+
+-include $(DEPS)
+
 TAGS :
 	@echo "GEN: TAGS"
 	@find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
 
 clean :
 	@echo "CLEAN"
-	-@rm $(TARGET) $(OBJS) $(ASOBJS) $(SYMS) 2>/dev/null || true
+	-@rm $(TARGET) $(OBJS) $(ASOBJS) $(SYMS) $(DEPS) 2>/dev/null || true
 
 mrproper : clean
 	@echo "MRPROPER"
