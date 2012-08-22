@@ -1,7 +1,7 @@
 #include <kernel/panic.h>
 #include <kernel/stdio.h>
 
-#include <asm/asm_common.h>
+#include <asm/common.h>
 
 void panic(const char *message, const char *file_name, unsigned int line_num)
 {

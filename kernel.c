@@ -5,7 +5,7 @@
 #include <kernel/screen.h>
 #include <kernel/stdio.h>
 
-#include <asm/asm_common.h>
+#include <asm/common.h>
 #include <asm/desc_tables.h>
 
 #include "multiboot.h"
@@ -31,13 +31,13 @@ int kmain(struct multiboot_info *mbd, unsigned int magic)
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
         PANIC("BAD MAGIC VALUE FROM BOOTLOADER!!!");
 
-    if (mbd->flags & 1)
+    if (mbd->flags & MULTIBOOT_INFO_MEMORY)
     {
         total_mem = mbd->mem_lower + mbd->mem_upper;
         printk("Booting with: %u kb of memory\n", total_mem);
     }
     else
-        PANIC("COULD NOT DETERMINE MEMORY SIZE\n");
+        PANIC("Could not determine memory size\n");
     
     kinit();
 

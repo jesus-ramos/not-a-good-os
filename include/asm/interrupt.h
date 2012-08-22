@@ -3,7 +3,7 @@
 
 #include <kernel/types.h>
 
-#include <asm/asm_common.h>
+#include <asm/common.h>
 #include <asm/port_comm.h>
 
 #define IRQ_ENABLED_FLAG (1 << 9)

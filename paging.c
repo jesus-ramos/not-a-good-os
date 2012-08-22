@@ -2,7 +2,7 @@
 #include <kernel/panic.h>
 #include <kernel/stdio.h>
 
-#include <asm/asm_paging.h>
+#include <asm/paging.h>
 #include <asm/interrupt.h>
 
 void handle_page_fault(struct registers *regs)
