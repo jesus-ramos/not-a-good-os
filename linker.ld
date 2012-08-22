@@ -5,7 +5,11 @@ SECTIONS
 {
     . = 0x00100000;
 
-    .MBHEADER : AT (0x00100000) { loader.o }
+    .MBHEADER : 
+    AT (0x00100000)
+    { 
+        loader.o 
+    }
 
     .text ALIGN (0x1000) :
     {

@@ -108,7 +108,6 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 
     for (str = buf; *fmt; fmt++)
     {
-        /* No format character, carry on */
         if (*fmt != '%')
         {
             *str++ = *fmt;

@@ -12,7 +12,7 @@
 
 unsigned long total_mem;
 
-int kinit()
+void kinit()
 {
     init_descriptor_tables();
     init_paging();
@@ -20,8 +20,6 @@ int kinit()
     init_console();
     
     enable_interrupts();
-    
-    return 0;
 }
 
 int kmain(struct multiboot_info *mbd, unsigned int magic)
@@ -29,7 +27,7 @@ int kmain(struct multiboot_info *mbd, unsigned int magic)
     fb_clear();
     
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
-        PANIC("BAD MAGIC VALUE FROM BOOTLOADER!!!");
+        PANIC("Received bad magic value from bootloader!!!");
 
     if (mbd->flags & MULTIBOOT_INFO_MEMORY)
     {
@@ -37,10 +35,10 @@ int kmain(struct multiboot_info *mbd, unsigned int magic)
         printk("Booting with: %u kb of memory\n", total_mem);
     }
     else
-        PANIC("Could not determine memory size\n");
-    
-    kinit();
+        PANIC("Could not determine memory size");
 
+    kinit();
+    
     while (1);
 
     return 0;

@@ -16,8 +16,6 @@
 #define BLACK 0
 #define WHITE 15
 
-#define FB_LOCATION (vid_mem + cursor_y * 80 + cursor_x)
-
 uint16_t cursor_x = 0;
 uint16_t cursor_y = 0;
 
@@ -48,6 +46,8 @@ static void fb_scroll()
         cursor_y = 24;
     }
 }
+
+#define FB_LOCATION (vid_mem + cursor_y * 80 + cursor_x)
 
 void fb_put_char(char c)
 {
@@ -88,6 +88,8 @@ void fb_put_char(char c)
     fb_scroll();
     fb_move_cursor();
 }
+
+#undef FB_LOCATION
 
 void fb_clear()
 {

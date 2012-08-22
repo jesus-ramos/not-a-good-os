@@ -37,12 +37,13 @@ $(TARGET) : $(OBJS) $(ASOBJS) linker.ld
 .s.o :
 	$(AS) $(ASFLAGS) -o $@ $<
 
-TAGS : FORCE
+TAGS :
 	find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
 
-.PHONY : clean FORCE mrproper
 clean :
 	-rm $(TARGET) $(OBJS) $(ASOBJS) $(SYMS)
 
 mrproper : clean
 	-rm .depend TAGS
+
+.PHONY : clean mrproper TAGS
