@@ -19,31 +19,38 @@ ASOBJS  = ${ASSRCS:.s=.o}
 
 all : $(TARGET)
 
-depend : .depend
-
 .depend : $(SRCS)
-	$(CC) $(CFLAGS) -MM $^ > .depend
+	@echo "DEPEND"
+	@$(CC) $(CFLAGS) -MM $^ > .depend
 
 include .depend
 
 $(TARGET) : $(OBJS) $(ASOBJS) linker.ld
-	$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS)
-	objcopy --only-keep-debug $(TARGET) $(SYMS)
-	objcopy --strip-debug $(TARGET)
+	@echo "LD: $(TARGET)"
+	@$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS)
+	@echo "OBJCOPY: $(SYMS)"
+	@objcopy --only-keep-debug $(TARGET) $(SYMS)
+	@echo "OBJCOPY: $(TARGET)"
+	@objcopy --strip-debug $(TARGET)
 
 .c.o :
-	$(CC) $(CFLAGS) -c $<
+	@echo "CC: $<"
+	@$(CC) $(CFLAGS) -c $<
 
 .s.o :
-	$(AS) $(ASFLAGS) -o $@ $<
+	@echo "AS: $<"
+	@$(AS) $(ASFLAGS) -o $@ $<
 
 TAGS :
-	find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
+	@echo "GEN: TAGS"
+	@find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
 
 clean :
-	-rm $(TARGET) $(OBJS) $(ASOBJS) $(SYMS)
+	@echo "CLEAN"
+	-@rm $(TARGET) $(OBJS) $(ASOBJS) $(SYMS) 2>/dev/null || true
 
 mrproper : clean
-	-rm .depend TAGS
+	@echo "MRPROPER"
+	-@rm .depend TAGS 2>/dev/null || true
 
 .PHONY : clean mrproper TAGS
