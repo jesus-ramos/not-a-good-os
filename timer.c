@@ -4,9 +4,11 @@
 #include <asm/common.h>
 #include <asm/interrupt.h>
 
+#define TIMER_IRQ IRQ0
+
 uint32_t tick = 0;
 
-void timer_callback(struct registers *regs)
+void timer_tick(struct registers *regs)
 {
     tick++;
     printk("TIMER TICK: %u\n", tick);
@@ -18,7 +20,7 @@ void init_timer(uint32_t freq)
     uint8_t low;
     uint8_t high;
     
-    register_interrupt_handler(IRQ0, timer_callback);
+    register_interrupt_handler(TIMER_IRQ, timer_tick);
 
     div = 1193180 / freq;
     
