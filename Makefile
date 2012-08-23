@@ -8,8 +8,9 @@ ASFLAGS = -f elf -Ox
 
 TARGET  = kernel.bin
 SYMS	= kernel.syms
-SRCS 	= kernel.c screen.c string.c desc_tables.c isr.c timer.c \
-	  vsprintf.c printk.c keyboard.c paging.c panic.c console.c
+SRCS 	= kernel.c screen.c string.c desc_tables.c isr.c timer.c 	\
+	  vsprintf.c printk.c keyboard.c paging.c panic.c console.c 	\
+	  heap.c
 ASSRCS  = loader.s gdt.s interrupt.s
 OBJS	= ${SRCS:.c=.o}
 ASOBJS  = ${ASSRCS:.s=.o}

@@ -1,8 +1,6 @@
 #ifndef _STDDEF_H
 #define _STDDEF_H
 
-typedef int size_t;
-
 #define offsetof(type, member) ((size_t)&((type *)0)->member)
 
 #define container_of(ptr, type, member)                         \
