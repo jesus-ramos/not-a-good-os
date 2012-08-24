@@ -5,7 +5,7 @@
 
 #define PAGE_SIZE 4096
 
-#define PAGE_FAULT_IRQ IRQ14
+#define PAGE_FAULT_IRQ 14
 
 #define PAGE_PRESENT_FAULT_FLAG     (1 << 0)
 #define WRITE_FAULT_FLAG            (1 << 1)
@@ -15,13 +15,13 @@
 
 struct page
 {
-    uint32_t present       : 1;
-    uint32_t rw            : 1;
-    uint32_t user          : 1;
-    uint32_t accessed      : 1;
-    uint32_t dirty         : 1;
-    uint32_t reserved      : 7; /* DO NOT TOUCH! */
-    uint32_t frame_address : 20;
+    int present       : 1;
+    int rw            : 1;
+    int user          : 1;
+    int accessed      : 1;
+    int dirty         : 1;
+    int reserved      : 7; /* DO NOT TOUCH! */
+    int frame         : 20;
 };
 
 struct page_table
@@ -32,10 +32,11 @@ struct page_table
 struct page_directory
 {
     struct page_table *page_tables[1024];
-    uint32_t tables_physical[1024];
-    uint32_t physical;
+    unsigned long tables_physical[1024];
+    unsigned long physical;
 };
 
 void init_paging();
+struct page *get_page(unsigned long address, int make, struct page_directory *page_directory);
 
 #endif /* _PAGING_H */

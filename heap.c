@@ -1,7 +1,8 @@
 #include <kernel/heap.h>
+#include <kernel/paging.h>
 
-#define ALIGN     0xFFFFF00
-#define ALIGN_INC 0x1000
+#define ALIGN     0xFFFFF000
+#define ALIGN_INC PAGE_SIZE
 
 /* linker.ld */
 extern unsigned int end;
@@ -38,4 +39,9 @@ void *kmalloc_phys(size_t size, unsigned long *phys_addr)
 void *kmalloc_align_phys(size_t size, unsigned long *phys_addr)
 {
     return _kmalloc(size, 1, phys_addr);
+}
+
+void *kmalloc(size_t size)
+{
+    return _kmalloc(size, 0, 0);
 }

@@ -25,8 +25,13 @@ static inline void enable_paging()
 
 static inline void switch_page_directory(struct page_directory *page_dir)
 {
-    asm volatile ("mov %0, %%cr3" : : "r" (&page_dir->tables_physical));
+    asm volatile ("mov %0, %%cr3" : : "r" (page_dir->tables_physical));
     enable_paging();
+}
+
+static inline void flush_tlb_single(unsigned long addr)
+{
+    asm volatile ("invlpg (%0)" : : "r" (addr) : "memory");
 }
 
 #endif /* _ASM_PAGING_H */
