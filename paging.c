@@ -115,7 +115,6 @@ struct page *get_page(unsigned long address, int make, struct page_directory *pa
     
     address /= PAGE_SIZE;
     table_index = address / 1024;
-    //table_index = address % 1024; 
 
     if (page_directory->page_tables[table_index])
         return &page_directory->page_tables[table_index]->pages[address % 1024];

@@ -45,3 +45,8 @@ void *kmalloc(size_t size)
 {
     return _kmalloc(size, 0, 0);
 }
+
+void kfree(void *addr)
+{
+    
+}
