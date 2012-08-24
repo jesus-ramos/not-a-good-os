@@ -42,12 +42,12 @@ static void clear_frame(unsigned long frame_addr)
     frames[index] &= ~(0x1 << offset);
 }
 
-static int test_frame(unsigned long frame_addr)
-{
-    FRAME_INDEX_OFFSET;
+/* static int test_frame(unsigned long frame_addr) */
+/* { */
+/*     FRAME_INDEX_OFFSET; */
 
-    return frames[index] & (0x1 << offset);
-}
+/*     return frames[index] & (0x1 << offset); */
+/* } */
 
 #undef FRAME_INDEX_OFFSET
 
