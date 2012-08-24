@@ -13,7 +13,7 @@
 unsigned long *frames;
 unsigned long num_frames;
 
-unsigned long mem_end = 0x1000000;
+unsigned long mem_end;
 
 struct page_directory *kernel_directory;
 struct page_directory *current_directory;

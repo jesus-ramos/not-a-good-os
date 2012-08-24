@@ -39,4 +39,7 @@ struct page_directory
 void init_paging();
 struct page *get_page(unsigned long address, int make, struct page_directory *page_directory);
 
+extern unsigned long total_mem;
+extern unsigned long mem_end;
+
 #endif /* _PAGING_H */

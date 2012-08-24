@@ -32,6 +32,7 @@ int kmain(struct multiboot_info *mbd, unsigned int magic)
     if (mbd->flags & MULTIBOOT_INFO_MEMORY)
     {
         total_mem = mbd->mem_lower + mbd->mem_upper;
+        mem_end = total_mem * 1024;
         printk("Booting with: %u kb of memory\n", total_mem);
     }
     else
