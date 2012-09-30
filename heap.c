@@ -8,7 +8,7 @@
 extern unsigned int end;
 unsigned long alloc_addr = (unsigned long)&end;
 
-void *_kmalloc(size_t size, int align, unsigned long *phys_addr)
+static void *_kmalloc(size_t size, int align, unsigned long *phys_addr)
 {
     unsigned long tmp;
     

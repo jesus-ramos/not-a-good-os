@@ -50,6 +50,7 @@ struct registers
 typedef void (*isr_t)(struct registers *);
 
 void register_interrupt_handler(uint8_t num, isr_t handler);
+void clear_intterupt(uint8_t num);
 
 extern isr_t interrupt_handlers[];
 

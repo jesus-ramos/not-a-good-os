@@ -34,5 +34,12 @@ void irq_handler(struct registers regs)
 
 void register_interrupt_handler(uint8_t num, isr_t handler)
 {
+    if (interrupt_handlers[num])
+        printk("Overriding interrupt handler %d\n", num);
     interrupt_handlers[num] = handler;
+}
+
+void clear_interrupt(uint8_t num)
+{
+    interrupt_handlers[num] = NULL;
 }

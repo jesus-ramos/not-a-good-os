@@ -1,10 +1,14 @@
 CC      = gcc
 CFLAGS	= -Wall -m32 -I./include/ -nostdlib -fno-builtin -nostartfiles \
 	  -nodefaultlibs -mno-sse -O3 -g
-LDFLAGS = -melf_i386 -T linker.ld
-LD 	= ld
+
 AS	= nasm
 ASFLAGS = -f elf -Ox
+
+BINTYPE = elf_i386
+LDCFG	= linker.ld
+LDFLAGS = -m$(BINTYPE) -T $(LDCFG)
+LD 	= ld
 
 TARGET  = kernel.bin
 SYMS	= kernel.syms
@@ -21,7 +25,7 @@ DEPS 	= ${SRCS:.c=.d}
 
 all : $(TARGET)
 
-$(TARGET) : $(OBJS) $(ASOBJS) linker.ld
+$(TARGET) : $(OBJS) $(ASOBJS) $(LDCFG)
 	@echo "LD: $(TARGET)"
 	@$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS)
 	@echo "OBJCOPY: $(SYMS)"
@@ -54,6 +58,6 @@ clean :
 
 mrproper : clean
 	@echo "MRPROPER"
-	-@rm .depend TAGS 2>/dev/null || true
+	-@rm TAGS 2>/dev/null || true
 
 .PHONY : clean mrproper TAGS

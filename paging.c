@@ -20,36 +20,42 @@ struct page_directory *current_directory;
 
 extern unsigned long alloc_addr;
 
-#define FRAME_INDEX_OFFSET                      \
-    int frame;                                  \
-    int index;                                  \
-    int offset;                                 \
-    frame = frame_addr / PAGE_SIZE;             \
-    index = INDEX_FROM_BIT(frame);              \
-    offset = OFFSET_FROM_BIT(frame);
+static inline void get_fid(unsigned long frame_addr, int *frame, int *index, int *offset)
+{
+    *frame = frame_addr / PAGE_SIZE;
+    *index = INDEX_FROM_BIT(*frame);
+    *offset = OFFSET_FROM_BIT(*frame);
+}
 
 static void set_frame(unsigned long frame_addr)
 {
-    FRAME_INDEX_OFFSET;
-
+    int frame;
+    int index;
+    int offset;
+    
+    get_fid(frame_addr, &frame, &index, &offset);
     frames[index] |= (0x1 << offset);
 }
 
 static void clear_frame(unsigned long frame_addr)
 {
-    FRAME_INDEX_OFFSET;
-
+    int frame;
+    int index;
+    int offset;
+    
+    get_fid(frame_addr, &frame, &index, &offset);
     frames[index] &= ~(0x1 << offset);
 }
 
 /* static int test_frame(unsigned long frame_addr) */
 /* { */
-/*     FRAME_INDEX_OFFSET; */
-
+/*     int frame; */
+/*     int index; */
+/*     int offset; */
+    
+/*     get_fid(frame_addr, &frame, &index, &offset); */
 /*     return frames[index] & (0x1 << offset); */
 /* } */
-
-#undef FRAME_INDEX_OFFSET
 
 static unsigned long first_free_frame()
 {
