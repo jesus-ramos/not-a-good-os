@@ -20,7 +20,7 @@ struct idt_ptr idt_ptr;
 #define SLAVE1  (SLAVE + 1)
 
 static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit,
-                         uint8_t access, uint8_t granularity)
+			 uint8_t access, uint8_t granularity)
 {
     gdt_entries[num].base_low    = (base & 0xFFFF);
     gdt_entries[num].base_middle = (base >> 16) & 0xFF;
@@ -37,23 +37,23 @@ static void init_gdt()
     gdt_ptr.base = (uint32_t)&gdt_entries;
 
     gdt_set_gate(0, 0, 0, 0, 0);                /* Null segment */
-    gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); /* Code segment */
-    gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF); /* Data segment */
-    gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); /* User mode code segment */
-    gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); /* User mode data segment */
+    gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);	/* Code segment */
+    gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);	/* Data segment */
+    gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);	/* User mode code segment */
+    gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);	/* User mode data segment */
 
     gdt_flush((uint32_t)&gdt_ptr);
 }
 
 static void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
 {
-   idt_entries[num].base_low  = base & 0xFFFF;
-   idt_entries[num].base_high = (base >> 16) & 0xFFFF;
-   idt_entries[num].selector  = sel;
-   idt_entries[num].zero      = 0;
-   idt_entries[num].flags     = flags;
-   /* USER MODE */
-   /* idt_entries[num].flags = flags | 0x60; */
+    idt_entries[num].base_low  = base & 0xFFFF;
+    idt_entries[num].base_high = (base >> 16) & 0xFFFF;
+    idt_entries[num].selector  = sel;
+    idt_entries[num].zero      = 0;
+    idt_entries[num].flags     = flags;
+    /* USER MODE */
+    /* idt_entries[num].flags = flags | 0x60; */
 }
 
 static void remap_irq_table()
@@ -111,7 +111,7 @@ static void init_idt()
     IDT_SET_GATE(29);
     IDT_SET_GATE(30);
     IDT_SET_GATE(31);
-    
+
     IDT_SET_IRQ_GATE(32, 0);
     IDT_SET_IRQ_GATE(33, 1);
     IDT_SET_IRQ_GATE(34, 2);
@@ -136,6 +136,6 @@ void init_descriptor_tables()
 {
     init_gdt();
     init_idt();
-    
+
     memset(&interrupt_handlers, 0, sizeof(isr_t) * 256);
 }
