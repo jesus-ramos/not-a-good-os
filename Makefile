@@ -16,7 +16,7 @@ BINDIR	= bin
 DEPSDIR = deps
 MKDIRS	= $(CURDIR)/{$(BINDIR),$(DEPSDIR)}
 
-VPATH	= boot drivers kernel lib mem bin
+VPATH	= boot drivers kernel lib mem
 # boot
 SRCS	+= kernel.c
 ASSRCS	+= loader.s
