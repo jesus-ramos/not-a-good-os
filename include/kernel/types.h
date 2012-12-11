@@ -11,4 +11,6 @@ typedef unsigned char  uint8_t;
 typedef char           int8_t;
 typedef unsigned long  size_t;
 
+typedef long long loff_t;
+
 #endif /* _TYPES_H */

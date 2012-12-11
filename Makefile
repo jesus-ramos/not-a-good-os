@@ -16,12 +16,14 @@ MKDIRS	= $(CURDIR)/{$(BINDIR),$(DEPSDIR)}
 TARGET	= $(BINDIR)/kernel.bin
 SYMS	= $(BINDIR)/kernel.syms
 
-VPATH	= boot drivers kernel lib mem
+VPATH	= boot drivers fs kernel lib mem
 # boot
 SRCS	+= kernel.c
 ASSRCS	+= loader.s
 # drivers
 SRCS	+= keyboard.c screen.c timer.c
+# fs
+SRCS	+= fs.c
 # kernel
 SRCS	+= console.c desc_tables.c isr.c panic.c printk.c
 ASSRCS	+= gdt.s interrupt.s
@@ -53,8 +55,8 @@ $(BINDIR)/%.o : %.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 $(DEPSDIR)/%.d : %.c
-	@$(CC) -M $(CFLAGS) $< > $@.$$$$;				\
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@;	\
+	@$(CC) -M $(CFLAGS) $< > $@.$$$$;						\
+	sed -e '1s#^#$(BINDIR)/#' -e 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@;	\
 	rm -f $@.$$$$
 
 TAGS :
