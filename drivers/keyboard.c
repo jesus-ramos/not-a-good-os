@@ -7,20 +7,20 @@
 
 #include <asm/interrupt.h>
 
-#define KEYBOARD_IRQ    IRQ1
+#define KEYBOARD_IRQ IRQ1
 
-#define KEY_RELEASED_BIT    7
-#define KEY_RELEASED        (1 << KEY_RELEASED_BIT)
+#define KEY_RELEASED_BIT 7
+#define KEY_RELEASED     (1 << KEY_RELEASED_BIT)
 
-#define KEYBOARD_DATA_PORT      0x60
-#define KEYBOARD_CMD_PORT       0x64
-#define KEYBOARD_BUSY           0x02
-#define KEYBOARD_SET_LEDS       0xED
-#define KEYBOARD_DISABLE        0xAD
-#define KEYBOARD_ENABLE         0xAE
-#define KEYBOARD_ACKNOWLEDGE    0xFA
-#define KEYBOARD_RESEND         0xFE
-#define KEY_EXTEND_BYTE         0xE0
+#define KEYBOARD_DATA_PORT   0x60
+#define KEYBOARD_CMD_PORT    0x64
+#define KEYBOARD_BUSY        0x02
+#define KEYBOARD_SET_LEDS    0xED
+#define KEYBOARD_DISABLE     0xAD
+#define KEYBOARD_ENABLE      0xAE
+#define KEYBOARD_ACKNOWLEDGE 0xFA
+#define KEYBOARD_RESEND      0xFE
+#define KEY_EXTEND_BYTE      0xE0
 
 static char scancode_table[] =
 {

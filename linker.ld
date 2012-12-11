@@ -5,10 +5,11 @@ SECTIONS
 {
     . = 0x00100000;
 
-    .MBHEADER : 
+    /* If $(BINDIR) changes, change it here as well */
+    .MBHEADER :
     AT (0x00100000)
-    { 
-        loader.o 
+    {
+        bin/loader.o
     }
 
     .text ALIGN (0x1000) :

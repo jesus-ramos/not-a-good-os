@@ -6,15 +6,15 @@ ASFLAGS = -f elf -Ox
 
 BINTYPE = elf_i386
 LDCFG	= linker.ld
-LDFLAGS = -m$(BINTYPE) -T ../$(LDCFG)
+LDFLAGS = -m$(BINTYPE) -T $(LDCFG) -L $(BINDIR)
 LD	= ld
-
-TARGET	= kernel.bin
-SYMS	= kernel.syms
 
 BINDIR	= bin
 DEPSDIR = deps
 MKDIRS	= $(CURDIR)/{$(BINDIR),$(DEPSDIR)}
+
+TARGET	= $(BINDIR)/kernel.bin
+SYMS	= $(BINDIR)/kernel.syms
 
 VPATH	= boot drivers kernel lib mem
 # boot
@@ -30,9 +30,9 @@ SRCS	+= string.c vsprintf.c
 # mem
 SRCS	+= heap.c paging.c
 
-OBJS	= ${SRCS:.c=.o}
-ASOBJS	= ${ASSRCS:.s=.o}
-DEPS	= ${SRCS:.c=.d}
+OBJS	= $(addprefix $(BINDIR)/,${SRCS:.c=.o})
+ASOBJS	= $(addprefix $(BINDIR)/,${ASSRCS:.s=.o})
+DEPS	= $(addprefix $(DEPSDIR)/,${SRCS:.c=.d})
 
 .SUFFIXES :
 .SUFFIXES : .o .c .s
@@ -42,32 +42,30 @@ $(shell `mkdir -p $(MKDIRS)`)
 all : $(TARGET)
 
 $(TARGET) : $(OBJS) $(ASOBJS) $(LDCFG)
-	cd $(BINDIR);						\
-	$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS) &&	\
-	objcopy --only-keep-debug $(TARGET) $(SYMS) &&		\
-	objcopy --strip-debug $(TARGET);			\
-	cd -
+	$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS)
+	objcopy --only-keep-debug $(TARGET) $(SYMS)
+	objcopy --strip-debug $(TARGET)
 
-%.o : %.c
-	$(CC) $(CFLAGS) -o $(BINDIR)/$@ -c $<
+$(BINDIR)/%.o : %.c
+	$(CC) $(CFLAGS) -o $@ -c $<
 
-%.o : %.s
-	$(AS) $(ASFLAGS) -o $(BINDIR)/$@ $<
+$(BINDIR)/%.o : %.s
+	$(AS) $(ASFLAGS) -o $@ $<
 
-%.d : %.c
+$(DEPSDIR)/%.d : %.c
 	@$(CC) -M $(CFLAGS) $< > $@.$$$$;				\
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $(DEPSDIR)/$@;	\
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@;	\
 	rm -f $@.$$$$
-
--include $(DEPS)
 
 TAGS :
 	find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
 
 clean :
-	-rm -r $(BINDIR) $(DEPSDIR) 2>/dev/null || true
+	-rm -r $(BINDIR) $(DEPSDIR)
 
 mrproper : clean
-	-rm TAGS 2>/dev/null || true
+	-rm TAGS
+
+-include $(DEPS)
 
 .PHONY : clean mrproper TAGS
