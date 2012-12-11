@@ -1,66 +1,73 @@
-CC      = gcc
+CC	= gcc
 CFLAGS	= -Wall -m32 -I./include/ -nostdlib -fno-builtin -nostartfiles \
 	  -nodefaultlibs -mno-sse -O3 -g
-
 AS	= nasm
 ASFLAGS = -f elf -Ox
 
 BINTYPE = elf_i386
 LDCFG	= linker.ld
-LDFLAGS = -m$(BINTYPE) -T $(LDCFG)
-LD 	= ld
+LDFLAGS = -m$(BINTYPE) -T ../$(LDCFG)
+LD	= ld
 
-TARGET  = kernel.bin
+TARGET	= kernel.bin
 SYMS	= kernel.syms
 
-SRCS 	= kernel.c screen.c string.c desc_tables.c isr.c timer.c 	\
-	  vsprintf.c printk.c keyboard.c paging.c panic.c console.c 	\
-	  heap.c
-VPATH 	= boot drivers init kernel lib mem
+BINDIR	= bin
+DEPSDIR = deps
+MKDIRS	= $(CURDIR)/{$(BINDIR),$(DEPSDIR)}
 
-ASSRCS  = loader.s gdt.s interrupt.s
+VPATH	= boot drivers kernel lib mem bin
+# boot
+SRCS	+= kernel.c
+ASSRCS	+= loader.s
+# drivers
+SRCS	+= keyboard.c screen.c timer.c
+# kernel
+SRCS	+= console.c desc_tables.c isr.c panic.c printk.c
+ASSRCS	+= gdt.s interrupt.s
+# lib
+SRCS	+= string.c vsprintf.c
+# mem
+SRCS	+= heap.c paging.c
+
 OBJS	= ${SRCS:.c=.o}
-ASOBJS  = ${ASSRCS:.s=.o}
-DEPS 	= ${SRCS:.c=.d}
+ASOBJS	= ${ASSRCS:.s=.o}
+DEPS	= ${SRCS:.c=.d}
 
 .SUFFIXES :
 .SUFFIXES : .o .c .s
 
+$(shell `mkdir -p $(MKDIRS)`)
+
 all : $(TARGET)
 
 $(TARGET) : $(OBJS) $(ASOBJS) $(LDCFG)
-	@echo "LD: $(TARGET)"
-	@$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS)
-	@echo "OBJCOPY: $(SYMS)"
-	@objcopy --only-keep-debug $(TARGET) $(SYMS)
-	@echo "OBJCOPY: $(TARGET)"
-	@objcopy --strip-debug $(TARGET)
+	cd $(BINDIR);						\
+	$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS) &&	\
+	objcopy --only-keep-debug $(TARGET) $(SYMS) &&		\
+	objcopy --strip-debug $(TARGET);			\
+	cd -
 
-.c.o :
-	@echo "CC: $<"
-	@$(CC) $(CFLAGS) -c $<
+%.o : %.c
+	$(CC) $(CFLAGS) -o $(BINDIR)/$@ -c $<
 
-.s.o :
-	@echo "AS: $<"
-	@$(AS) $(ASFLAGS) -o $@ $<
+%.o : %.s
+	$(AS) $(ASFLAGS) -o $(BINDIR)/$@ $<
 
 %.d : %.c
-	@$(CC) -M $(CFLAGS) $< > $@.$$$$;			\
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; 	\
+	@$(CC) -M $(CFLAGS) $< > $@.$$$$;				\
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $(DEPSDIR)/$@;	\
 	rm -f $@.$$$$
 
 -include $(DEPS)
 
 TAGS :
-	@echo "GEN: TAGS"
-	@find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
+	find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
 
 clean :
-	@echo "CLEAN"
-	-@rm $(TARGET) $(OBJS) $(ASOBJS) $(SYMS) $(DEPS) 2>/dev/null || true
+	-rm -r $(BINDIR) $(DEPSDIR) 2>/dev/null || true
 
 mrproper : clean
-	@echo "MRPROPER"
-	-@rm TAGS 2>/dev/null || true
+	-rm TAGS 2>/dev/null || true
 
 .PHONY : clean mrproper TAGS

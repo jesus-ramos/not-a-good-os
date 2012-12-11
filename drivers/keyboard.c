@@ -7,20 +7,20 @@
 
 #include <asm/interrupt.h>
 
-#define KEYBOARD_IRQ	IRQ1
+#define KEYBOARD_IRQ    IRQ1
 
 #define KEY_RELEASED_BIT    7
-#define KEY_RELEASED	    (1 << KEY_RELEASED_BIT)
+#define KEY_RELEASED        (1 << KEY_RELEASED_BIT)
 
-#define KEYBOARD_DATA_PORT	0x60
-#define KEYBOARD_CMD_PORT	0x64
-#define KEYBOARD_BUSY		0x02
-#define KEYBOARD_SET_LEDS	0xED
-#define KEYBOARD_DISABLE	0xAD
-#define KEYBOARD_ENABLE		0xAE
-#define KEYBOARD_ACKNOWLEDGE	0xFA
-#define KEYBOARD_RESEND		0xFE
-#define KEY_EXTEND_BYTE		0xE0
+#define KEYBOARD_DATA_PORT      0x60
+#define KEYBOARD_CMD_PORT       0x64
+#define KEYBOARD_BUSY           0x02
+#define KEYBOARD_SET_LEDS       0xED
+#define KEYBOARD_DISABLE        0xAD
+#define KEYBOARD_ENABLE         0xAE
+#define KEYBOARD_ACKNOWLEDGE    0xFA
+#define KEYBOARD_RESEND         0xFE
+#define KEY_EXTEND_BYTE         0xE0
 
 static char scancode_table[] =
 {
@@ -98,7 +98,7 @@ static char scancode_table[] =
 };
 
 static char numeric_symbols[] = { '~', '!', '@', '#', '$', '%', '^', '&', '*',
-				  '(', ')', '_', '+' };
+                                  '(', ')', '_', '+' };
 
 struct keyboard_state kb_state;
 
@@ -128,12 +128,12 @@ static inline int is_lock_key(uint8_t scancode)
 {
     switch (scancode)
     {
-	case CAPS_LOCK:
-	case SCROLL_LOCK:
-	case NUM_LOCK:
-	    return 1;
-	default:
-	    return 0;
+        case CAPS_LOCK:
+        case SCROLL_LOCK:
+        case NUM_LOCK:
+            return 1;
+        default:
+            return 0;
     }
 }
 
@@ -150,18 +150,18 @@ static inline void toggle_lock_key(uint8_t scancode)
 
     switch (scancode)
     {
-	case CAPS_LOCK:
-	    key = CAPS_LOCK_BIT;
-	    break;
-	case SCROLL_LOCK:
-	    key = SCROLL_LOCK_BIT;
-	    break;
-	case NUM_LOCK:
-	    key = NUM_LOCK_BIT;
-	    break;
-	default:
-	    BUG("INVALID SCANCODE FOR LOCK KEY");
-	    return;
+        case CAPS_LOCK:
+            key = CAPS_LOCK_BIT;
+            break;
+        case SCROLL_LOCK:
+            key = SCROLL_LOCK_BIT;
+            break;
+        case NUM_LOCK:
+            key = NUM_LOCK_BIT;
+            break;
+        default:
+            BUG("INVALID SCANCODE FOR LOCK KEY");
+            return;
     }
 
     toggle_bitb(&kb_state.lock_keys, key);
@@ -175,19 +175,19 @@ static inline uint8_t get_modifier_key_flag(uint8_t scancode)
 
     switch (scancode)
     {
-	case CTRL:
-	    bit = MODKEY_CTRL;
-	    break;
-	case ALT:
-	    bit = MODKEY_ALT;
-	    break;
-	case RIGHT_SHIFT:
-	case LEFT_SHIFT:
-	    bit = MODKEY_SHIFT;
-	    break;
-	default:
-	    BUG("INVALID MODIFIER KEY");
-	    return 0;
+        case CTRL:
+            bit = MODKEY_CTRL;
+            break;
+        case ALT:
+            bit = MODKEY_ALT;
+            break;
+        case RIGHT_SHIFT:
+        case LEFT_SHIFT:
+            bit = MODKEY_SHIFT;
+            break;
+        default:
+            BUG("INVALID MODIFIER KEY");
+            return 0;
     }
 
     return bit;
@@ -225,38 +225,38 @@ static void handle_keyboard(struct registers *regs)
     send_eoi();
 
     if (!keyboard_handler)
-	return;
+        return;
 
     keyevent.scancode = inportb(KEYBOARD_DATA_PORT);
     keyevent.released = keyevent.scancode & KEY_RELEASED;
     if (keyevent.released)
-	unset_bitb(&keyevent.scancode, KEY_RELEASED_BIT);
+        unset_bitb(&keyevent.scancode, KEY_RELEASED_BIT);
     keyevent.key = scancode_table[keyevent.scancode];
 
     if (!keyevent.released)
     {
-	if (keyevent.key)
-	{
-	    if (isalpha(keyevent.key) &&
-		((kb_state.modifier_keys & SHIFT_SET) ||
-		 (kb_state.lock_keys & CAPS_LOCK_ON)))
-		keyevent.key = toupper(keyevent.key);
-	    else if (is_numeric_row_key(keyevent.scancode) &&
-		     !is_keypad_key(keyevent.scancode) &&
-		     (kb_state.modifier_keys & SHIFT_SET))
-		keyevent.key = numeric_row_apply_shift(keyevent.scancode);
-	    else if (isdigit(keyevent.key) &&
-		     is_keypad_key(keyevent.scancode) &&
-		     !(kb_state.lock_keys & NUM_LOCK_ON))
-		keyevent.key = '\0';
-	}
-	else if (is_lock_key(keyevent.scancode))
-	    toggle_lock_key(keyevent.scancode);
-	else if (is_modifier_key(keyevent.scancode))
-	    set_modifier_key_flag(keyevent.scancode);
+        if (keyevent.key)
+        {
+            if (isalpha(keyevent.key) &&
+                ((kb_state.modifier_keys & SHIFT_SET) ||
+                 (kb_state.lock_keys & CAPS_LOCK_ON)))
+                keyevent.key = toupper(keyevent.key);
+            else if (is_numeric_row_key(keyevent.scancode) &&
+                     !is_keypad_key(keyevent.scancode) &&
+                     (kb_state.modifier_keys & SHIFT_SET))
+                keyevent.key = numeric_row_apply_shift(keyevent.scancode);
+            else if (isdigit(keyevent.key) &&
+                     is_keypad_key(keyevent.scancode) &&
+                     !(kb_state.lock_keys & NUM_LOCK_ON))
+                keyevent.key = '\0';
+        }
+        else if (is_lock_key(keyevent.scancode))
+            toggle_lock_key(keyevent.scancode);
+        else if (is_modifier_key(keyevent.scancode))
+            set_modifier_key_flag(keyevent.scancode);
     }
     else if (is_modifier_key(keyevent.scancode))
-	unset_modifier_key_flag(keyevent.scancode);
+        unset_modifier_key_flag(keyevent.scancode);
 
     keyevent.kb_state = kb_state;
 

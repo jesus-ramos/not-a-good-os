@@ -25,26 +25,26 @@ enum lock_key_bits
 #define NUM_LOCK_ON    (1 << NUM_LOCK_BIT)
 #define CAPS_LOCK_ON   (1 << CAPS_LOCK_BIT)
 
-#define ESCAPE      0x01
-#define CTRL        0x1D
+#define ESCAPE	    0x01
+#define CTRL	    0x1D
 #define LEFT_SHIFT  0x2A
 #define RIGHT_SHIFT 0x36
-#define ALT         0x38
+#define ALT	    0x38
 #define CAPS_LOCK   0x3A
-#define F1          0x3B
-#define F2          0x3C
-#define F3          0x3D
-#define F4          0x3E
-#define F5          0x3F
-#define F6          0x40
-#define F7          0x41
-#define F8          0x42
-#define F9          0x43
-#define F10         0x44
+#define F1	    0x3B
+#define F2	    0x3C
+#define F3	    0x3D
+#define F4	    0x3E
+#define F5	    0x3F
+#define F6	    0x40
+#define F7	    0x41
+#define F8	    0x42
+#define F9	    0x43
+#define F10	    0x44
 #define NUM_LOCK    0x45
 #define SCROLL_LOCK 0x46
-#define F11         0x57
-#define F12         0x58
+#define F11	    0x57
+#define F12	    0x58
 
 struct keyboard_state
 {
@@ -81,20 +81,20 @@ static inline int is_modifier_key(uint8_t scancode)
 {
     switch (scancode)
     {
-        case LEFT_SHIFT:
-        case RIGHT_SHIFT:
-        case ALT:
-        case CTRL:
-            return 1;
-        default:
-            return 0;
+	case LEFT_SHIFT:
+	case RIGHT_SHIFT:
+	case ALT:
+	case CTRL:
+	    return 1;
+	default:
+	    return 0;
     }
 }
 
 static inline int is_function_key(uint8_t scancode)
 {
     return (scancode >= 0x3B && scancode <= 0x44) ||
-        scancode == 0x57 || scancode == 0x58;
+	scancode == 0x57 || scancode == 0x58;
 }
 
 #endif /* _KEYBOARD_H */

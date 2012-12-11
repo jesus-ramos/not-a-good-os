@@ -5,7 +5,7 @@
 void handle_console_input(const struct keyevent_data *keyevent)
 {
     if (keyevent->key && !keyevent->released)
-        printk("%c", keyevent->key);
+	printk("%c", keyevent->key);
 }
 
 void init_console()
