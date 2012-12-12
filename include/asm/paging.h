@@ -8,7 +8,7 @@
 static inline unsigned long get_faulting_address()
 {
     unsigned long faulting_address;
-    
+
     asm volatile ("mov %%cr2, %0" : "=r" (faulting_address));
 
     return faulting_address;
@@ -32,6 +32,14 @@ static inline void switch_page_directory(struct page_directory *page_dir)
 static inline void flush_tlb_single(unsigned long addr)
 {
     asm volatile ("invlpg (%0)" : : "r" (addr) : "memory");
+}
+
+static inline void flush_tlb()
+{
+    uint32_t pd_addr;
+
+    asm volatile ("mov %%cr3, %0" : "=r" (pd_addr));
+    asm volatile ("mov %0, %%cr3" : : "r" (pd_addr));
 }
 
 #endif /* _ASM_PAGING_H */

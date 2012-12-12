@@ -31,6 +31,7 @@ ASSRCS	+= gdt.s interrupt.s
 SRCS	+= string.c vsprintf.c
 # mem
 SRCS	+= heap.c paging.c
+ASSRCS	+= process.s
 
 OBJS	= $(addprefix $(BINDIR)/,${SRCS:.c=.o})
 ASOBJS	= $(addprefix $(BINDIR)/,${ASSRCS:.s=.o})
