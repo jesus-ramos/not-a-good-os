@@ -8,8 +8,10 @@
 #define VGA_HIGH_BYTE 14
 #define VGA_LOW_BYTE  15
 
-#define ATTR_BYTE(fore_color, back_color) ((back_color << 4) | (fore_color & 0x0F))
-#define ATTR(fore_color, back_color) (ATTR_BYTE(fore_color, back_color) << 8)
+#define ATTR_BYTE(fore_color, back_color)       \
+    ((back_color << 4) | (fore_color &0x0F))
+#define ATTR(fore_color, back_color)            \
+    (ATTR_BYTE(fore_color, back_color) << 8)
 
 #define BLANK (0x20 | (ATTR_BYTE(WHITE, BLACK) << 8))
 
@@ -39,11 +41,11 @@ static void fb_scroll()
 
     if (cursor_y >= 25)
     {
-	for (i = 0; i < 24 * 80; i++)
-	    vid_mem[i] = vid_mem[i + 80];
-	for (i = 24 * 80; i < 25 * 80; i++)
-	    vid_mem[i] = BLANK;
-	cursor_y = 24;
+        for (i = 0; i < 24 * 80; i++)
+            vid_mem[i] = vid_mem[i + 80];
+        for (i = 24 * 80; i < 25 * 80; i++)
+            vid_mem[i] = BLANK;
+        cursor_y = 24;
     }
 }
 
@@ -55,34 +57,34 @@ void fb_put_char(char c)
 
     switch (c)
     {
-	case '\b':
-	    if (cursor_x)
-	    {
-		cursor_x--;
-		loc = FB_LOCATION;
-		*loc = BLANK;
-	    }
-	    break;
-	case '\t':
-	    cursor_x = (cursor_x + 8) & ~7;
-	    break;
-	case '\r':
-	    cursor_x = 0;
-	    break;
-	case '\n':
-	    cursor_x = 0;
-	    cursor_y++;
-	    break;
-	default:
-	    loc = FB_LOCATION;
-	    *loc = c | ATTR(WHITE, BLACK);
-	    cursor_x++;
+        case '\b':
+            if (cursor_x)
+            {
+                cursor_x--;
+                loc = FB_LOCATION;
+                *loc = BLANK;
+            }
+            break;
+        case '\t':
+            cursor_x = (cursor_x + 8) & ~7;
+            break;
+        case '\r':
+            cursor_x = 0;
+            break;
+        case '\n':
+            cursor_x = 0;
+            cursor_y++;
+            break;
+        default:
+            loc = FB_LOCATION;
+            *loc = c | ATTR(WHITE, BLACK);
+            cursor_x++;
     }
 
     if (cursor_x >= 80)
     {
-	cursor_x = 0;
-	cursor_y++;
+        cursor_x = 0;
+        cursor_y++;
     }
 
     fb_scroll();
@@ -96,7 +98,7 @@ void fb_clear()
     int i;
 
     for (i = 0; i < 25 * 80; i++)
-	vid_mem[i] = BLANK;
+        vid_mem[i] = BLANK;
 
     cursor_x = 0;
     cursor_y = 0;
@@ -106,5 +108,5 @@ void fb_clear()
 void fb_put_str(char *str)
 {
     while (*str)
-	fb_put_char(*str++);
+        fb_put_char(*str++);
 }

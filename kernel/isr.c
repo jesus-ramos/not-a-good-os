@@ -9,7 +9,7 @@ isr_t interrupt_handlers[256];
 void isr_handler(struct registers regs)
 {
     isr_t handler;
-    
+
     if (interrupt_handlers[regs.int_num])
     {
         handler = interrupt_handlers[regs.int_num];
@@ -20,7 +20,7 @@ void isr_handler(struct registers regs)
 void irq_handler(struct registers regs)
 {
     isr_t handler;
-    
+
     if (regs.int_num >= 40)
         outportb(SLAVE, 0x20);
     outportb(MASTER, 0x20);

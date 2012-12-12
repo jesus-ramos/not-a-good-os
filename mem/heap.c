@@ -11,7 +11,7 @@ unsigned long alloc_addr = (unsigned long)&end;
 static void *_kmalloc(size_t size, int align, unsigned long *phys_addr)
 {
     unsigned long tmp;
-    
+
     if (align && (alloc_addr & ALIGN))
     {
         alloc_addr &= ALIGN;
@@ -48,5 +48,5 @@ void *kmalloc(size_t size)
 
 void kfree(void *addr)
 {
-    
+
 }

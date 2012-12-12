@@ -20,7 +20,8 @@ struct page_directory *current_directory;
 
 extern unsigned long alloc_addr;
 
-static inline void get_fid(unsigned long frame_addr, int *frame, int *index, int *offset)
+static inline void get_fid(unsigned long frame_addr, int *frame, int *index,
+                           int *offset)
 {
     *frame = frame_addr / PAGE_SIZE;
     *index = INDEX_FROM_BIT(*frame);
@@ -32,7 +33,7 @@ static void set_frame(unsigned long frame_addr)
     int frame;
     int index;
     int offset;
-    
+
     get_fid(frame_addr, &frame, &index, &offset);
     frames[index] |= (0x1 << offset);
 }
@@ -42,7 +43,7 @@ static void clear_frame(unsigned long frame_addr)
     int frame;
     int index;
     int offset;
-    
+
     get_fid(frame_addr, &frame, &index, &offset);
     frames[index] &= ~(0x1 << offset);
 }
@@ -52,7 +53,7 @@ static void clear_frame(unsigned long frame_addr)
 /*     int frame; */
 /*     int index; */
 /*     int offset; */
-    
+
 /*     get_fid(frame_addr, &frame, &index, &offset); */
 /*     return frames[index] & (0x1 << offset); */
 /* } */
@@ -114,26 +115,30 @@ void handle_page_fault(struct registers *regs)
     PANIC("PAGING NOT IMPLEMENTED YET");
 }
 
-struct page *get_page(unsigned long address, int make, struct page_directory *page_directory)
+struct page *get_page(unsigned long address, int make,
+                      struct page_directory *page_directory)
 {
     unsigned long table_index;
     unsigned long tmp;
-    
+
     address /= PAGE_SIZE;
     table_index = address / 1024;
 
     if (page_directory->page_tables[table_index])
-        return &page_directory->page_tables[table_index]->pages[address % 1024];
-    
+        return
+            &page_directory->page_tables[table_index]->pages[address % 1024];
+
     if (make)
     {
-        page_directory->page_tables[table_index] =
-            (struct page_table *)kmalloc_align_phys(sizeof(struct page_table), &tmp);
+        page_directory->page_tables[table_index] = (struct page_table *)
+            kmalloc_align_phys(sizeof(struct page_table), &tmp);
         memset(page_directory->page_tables[table_index], 0, PAGE_SIZE);
         page_directory->tables_physical[table_index] = tmp | 0x7;
-        return &page_directory->page_tables[table_index]->pages[address % 1024];
+
+        return
+            &page_directory->page_tables[table_index]->pages[address % 1024];
     }
-    
+
     return NULL;
 }
 
@@ -147,7 +152,8 @@ void init_paging()
     frames = (unsigned long *)kmalloc(size);
     memset(frames, 0, size);
 
-    kernel_directory = (struct page_directory *)kmalloc_aligned(sizeof(struct page_directory));
+    kernel_directory = (struct page_directory *)
+        kmalloc_aligned(sizeof(struct page_directory));
     memset(kernel_directory, 0, sizeof(struct page_directory));
     current_directory = kernel_directory;
 
@@ -157,7 +163,7 @@ void init_paging()
         alloc_frame(get_page(i, 1, kernel_directory), 0, 0);
         i += PAGE_SIZE;
     }
-    
+
     register_interrupt_handler(PAGE_FAULT_IRQ, handle_page_fault);
 
     switch_page_directory(kernel_directory);
