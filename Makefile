@@ -6,7 +6,7 @@ ASFLAGS = -f elf -Ox
 
 BINTYPE = elf_i386
 LDCFG	= linker.ld
-LDFLAGS = -m$(BINTYPE) -T $(LDCFG) -L $(BINDIR)
+LDFLAGS = -m$(BINTYPE) -T $(LDCFG)
 LD	= ld
 
 BINDIR	= bin
@@ -55,7 +55,7 @@ $(BINDIR)/%.o : %.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 $(DEPSDIR)/%.d : %.c
-	@$(CC) -M $(CFLAGS) $< > $@.$$$$;			\
+	@$(CC) $(CFLAGS) -M $< > $@.$$$$;			\
 	sed -e '1s#^#$(BINDIR)/#'				\
 	-e 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@;	\
 	rm -f $@.$$$$
