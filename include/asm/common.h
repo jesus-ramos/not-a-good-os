@@ -11,7 +11,7 @@ static inline void outportb(uint16_t port, uint8_t value)
 static inline uint8_t inportb(uint16_t port)
 {
     uint8_t ret;
-    
+
     asm volatile ("inb %1, %0" : "=a" (ret) : "dN" (port));
 
     return ret;
@@ -45,6 +45,24 @@ static inline int get_cpu_flags()
     return flags;
 }
 
+static inline unsigned long read_esp()
+{
+    unsigned long esp;
+
+    asm volatile ("mov %%esp, %0" : "=r" (esp));
+
+    return esp;
+}
+
+static inline unsigned long read_ebp()
+{
+    unsigned long ebp;
+
+    asm volatile ("mov %%ebp, %0" : "=r" (ebp));
+
+    return ebp;
+}
+
 static inline void disable_interrupts()
 {
     asm volatile ("cli");
@@ -54,5 +72,8 @@ static inline void enable_interrupts()
 {
     asm volatile ("sti");
 }
+
+/* process.s */
+extern unsigned long read_eip();
 
 #endif /* _ASM_COMMON_H */

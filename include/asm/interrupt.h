@@ -27,7 +27,7 @@
 struct registers
 {
     uint32_t ds;
-    
+
     uint32_t edi;
     uint32_t esi;
     uint32_t ebp;

@@ -13,4 +13,6 @@ typedef unsigned long  size_t;
 
 typedef long long loff_t;
 
+typedef int pid_t;
+
 #endif /* _TYPES_H */

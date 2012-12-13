@@ -37,9 +37,13 @@ struct page_directory
 };
 
 void init_paging();
-struct page *get_page(unsigned long address, int make, struct page_directory *page_directory);
+struct page *get_page(unsigned long address, int make,
+                      struct page_directory *page_directory);
+struct page_directory *clone_directory(struct page_directory *src);
 
 extern unsigned long total_mem;
 extern unsigned long mem_end;
+
+extern struct page_directory *current_directory;
 
 #endif /* _PAGING_H */

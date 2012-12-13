@@ -16,7 +16,7 @@ MKDIRS	= $(CURDIR)/{$(BINDIR),$(DEPSDIR)}
 TARGET	= $(BINDIR)/kernel.bin
 SYMS	= $(BINDIR)/kernel.syms
 
-VPATH	= boot drivers fs kernel lib mem
+VPATH	= boot drivers fs kernel lib mem sched
 # boot
 SRCS	+= kernel.c
 ASSRCS	+= loader.s
@@ -25,13 +25,15 @@ SRCS	+= keyboard.c screen.c timer.c
 # fs
 SRCS	+= fs.c
 # kernel
-SRCS	+= console.c desc_tables.c isr.c panic.c printk.c
+SRCS	+= console.c desc_tables.c isr.c panic.c printk.c task.c
 ASSRCS	+= gdt.s interrupt.s
 # lib
 SRCS	+= string.c vsprintf.c
 # mem
 SRCS	+= heap.c paging.c
 ASSRCS	+= process.s
+# sched
+SRCS	+= schedule.c
 
 OBJS	= $(addprefix $(BINDIR)/,${SRCS:.c=.o})
 ASOBJS	= $(addprefix $(BINDIR)/,${ASSRCS:.s=.o})

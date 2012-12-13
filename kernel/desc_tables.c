@@ -20,7 +20,7 @@ struct idt_ptr idt_ptr;
 #define SLAVE1  (SLAVE + 1)
 
 static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit,
-			 uint8_t access, uint8_t granularity)
+                         uint8_t access, uint8_t granularity)
 {
     gdt_entries[num].base_low    = (base & 0xFFFF);
     gdt_entries[num].base_middle = (base >> 16) & 0xFF;
@@ -37,10 +37,10 @@ static void init_gdt()
     gdt_ptr.base = (uint32_t)&gdt_entries;
 
     gdt_set_gate(0, 0, 0, 0, 0);                /* Null segment */
-    gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);	/* Code segment */
-    gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);	/* Data segment */
-    gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);	/* User mode code segment */
-    gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);	/* User mode data segment */
+    gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); /* Code segment */
+    gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF); /* Data segment */
+    gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); /* User mode code segment */
+    gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); /* User mode data segment */
 
     gdt_flush((uint32_t)&gdt_ptr);
 }

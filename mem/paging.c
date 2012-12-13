@@ -20,6 +20,10 @@ struct page_directory *current_directory;
 
 extern unsigned long alloc_addr;
 
+/* process.s */
+extern void copy_page_physical(unsigned long src_addr,
+                               unsigned long dest_address);
+
 static inline void get_fid(unsigned long frame_addr, int *frame, int *index,
                            int *offset)
 {
@@ -140,6 +144,68 @@ struct page *get_page(unsigned long address, int make,
     }
 
     return NULL;
+}
+
+static struct page_table *clone_table(struct page_table *src,
+                                      unsigned long *phys_addr)
+{
+    struct page_table *table;
+    int i;
+
+    table = (struct page_table *)kmalloc_align_phys(sizeof(struct page_table),
+                                                    phys_addr);
+    memset(table, 0, sizeof(struct page_table));
+
+    for (i = 0; i < 1024; i++)
+        if (src->pages[i].frame)
+        {
+            alloc_frame(&table->pages[i], 0, 0);
+            table->pages[i].present  = src->pages[i].present;
+            table->pages[i].rw       = src->pages[i].rw;
+            table->pages[i].user     = src->pages[i].user;
+            table->pages[i].accessed = src->pages[i].accessed;
+            table->pages[i].dirty    = src->pages[i].dirty;
+            copy_page_physical(src->pages[i].frame * PAGE_SIZE,
+                               table->pages[i].frame * PAGE_SIZE);
+        }
+
+    return table;
+}
+
+struct page_directory *clone_directory(struct page_directory *src)
+{
+    unsigned long phys_addr;
+    struct page_directory *page_dir;
+    unsigned long offset;
+    int i;
+    unsigned long phys;
+
+    page_dir = (struct page_directory *)
+        kmalloc_align_phys(sizeof(struct page_directory), &phys_addr);
+    memset(page_dir, 0, sizeof(struct page_directory));
+    offset = (unsigned long)page_dir->tables_physical -
+        (unsigned long)page_dir;
+    page_dir->physical = phys_addr + offset;
+
+    for (i = 0; i < 1024; i++)
+    {
+        if (!src->page_tables[i])
+            continue;
+
+        if (kernel_directory->page_tables[i] == src->page_tables[i])
+        {
+            page_dir->page_tables[i]          = src->page_tables[i];
+            page_dir->tables_physical[i] = src->tables_physical[i];
+        }
+        else
+        {
+            page_dir->page_tables[i] = clone_table(src->page_tables[i],
+                                                   &phys);
+            page_dir->tables_physical[i] = phys | 0x07;
+        }
+    }
+
+    return page_dir;
 }
 
 void init_paging()
