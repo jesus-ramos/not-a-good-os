@@ -3,6 +3,8 @@
 
 #include <kernel/task.h>
 
+#define SCHED_TICK 50 /* 100 Hz */
+
 void schedule();
 
 extern volatile struct task *current;

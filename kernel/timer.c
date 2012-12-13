@@ -1,3 +1,4 @@
+#include <kernel/scheduler.h>
 #include <kernel/stdio.h>
 #include <kernel/timer.h>
 
@@ -11,7 +12,7 @@ uint32_t tick = 0;
 void timer_tick(struct registers *regs)
 {
     tick++;
-    printk("TIMER TICK: %u\n", tick);
+    schedule();
 }
 
 void init_timer(uint32_t freq)

@@ -2,8 +2,10 @@
 #include <kernel/keyboard.h>
 #include <kernel/paging.h>
 #include <kernel/panic.h>
+#include <kernel/scheduler.h>
 #include <kernel/screen.h>
 #include <kernel/stdio.h>
+#include <kernel/timer.h>
 
 #include <asm/common.h>
 #include <asm/desc_tables.h>
@@ -18,6 +20,7 @@ void kinit()
     init_descriptor_tables();
     init_paging();
     init_keyboard();
+    init_timer(SCHED_TICK);
 
     enable_interrupts();
 }
