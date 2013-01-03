@@ -152,8 +152,8 @@ static struct page_table *clone_table(struct page_table *src,
     struct page_table *table;
     int i;
 
-    table = (struct page_table *)kmalloc_align_phys(sizeof(struct page_table),
-                                                    phys_addr);
+    table = (struct page_table *)
+        kmalloc_align_phys(sizeof(struct page_table), phys_addr);
     memset(table, 0, sizeof(struct page_table));
 
     for (i = 0; i < 1024; i++)

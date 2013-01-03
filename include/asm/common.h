@@ -63,6 +63,9 @@ static inline unsigned long read_ebp()
     return ebp;
 }
 
+/* process.s */
+extern unsigned long read_eip();
+
 static inline void disable_interrupts()
 {
     asm volatile ("cli");
@@ -72,8 +75,5 @@ static inline void enable_interrupts()
 {
     asm volatile ("sti");
 }
-
-/* process.s */
-extern unsigned long read_eip();
 
 #endif /* _ASM_COMMON_H */
