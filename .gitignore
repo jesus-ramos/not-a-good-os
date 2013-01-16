@@ -6,3 +6,4 @@ kernel.bin
 .zcache
 TAGS
 kernel.syms
+cscope*
