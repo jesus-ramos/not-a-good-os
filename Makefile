@@ -9,6 +9,8 @@ LDCFG	= linker.ld
 LDFLAGS = -m$(BINTYPE) -T $(LDCFG)
 LD	= ld
 
+DOC_CFG = doxygen.config
+
 BINDIR	= bin
 DEPSDIR = deps
 MKDIRS	= $(CURDIR)/{$(BINDIR),$(DEPSDIR)}
@@ -66,12 +68,15 @@ $(DEPSDIR)/%.d : %.c
 TAGS :
 	find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
 
+docs:
+	doxygen $(DOC_CFG)
+
 clean :
 	-rm -r $(BINDIR) $(DEPSDIR)
 
 mrproper : clean
-	-rm TAGS
+	-rm -r TAGS cscope* docs
 
 -include $(DEPS)
 
-.PHONY : clean mrproper TAGS
+.PHONY : clean mrproper TAGS docs
