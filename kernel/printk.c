@@ -1,8 +1,21 @@
+/**
+ * @file
+ *
+ * Kernel printing functions, currently only supports printing to the screen
+ */
+
 #include <kernel/screen.h>
 #include <kernel/stdio.h>
 
 char kern_buf[1024];
 
+/**
+ * @brief Basic kernel printing function for outputting to the kernel console
+ * (currently just the screen)
+ *
+ * @param[in] fmt string to print to the screen, for now we assume it's as big
+ * as 1024 characters. Supports same formatting as glibc printf function.
+ */
 void printk(const char *fmt, ...)
 {
     va_list args;

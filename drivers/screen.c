@@ -1,3 +1,8 @@
+/** @file
+ *
+ * Basic VGA frame buffer driver
+ */
+
 #include <kernel/screen.h>
 #include <kernel/types.h>
 
@@ -23,6 +28,9 @@ uint16_t cursor_y = 0;
 
 volatile uint16_t *vid_mem = (volatile uint16_t *)0xb8000;
 
+/**
+ * @brief Move the frame buffer cursor to the appropriate location on screen
+ */
 static void fb_move_cursor()
 {
     uint16_t cursor_loc;
@@ -35,6 +43,9 @@ static void fb_move_cursor()
     outportb(VGA_DATA, cursor_loc);
 }
 
+/**
+ * @brief Scroll the frame buffer if necessary
+ */
 static void fb_scroll()
 {
     int i;
@@ -51,6 +62,11 @@ static void fb_scroll()
 
 #define FB_LOCATION (vid_mem + cursor_y * 80 + cursor_x)
 
+/**
+ * @brief Put a character onto the screen
+ *
+ * @param c Character to put on the screen
+ */
 void fb_put_char(char c)
 {
     volatile uint16_t *loc;
@@ -93,6 +109,9 @@ void fb_put_char(char c)
 
 #undef FB_LOCATION
 
+/**
+ * @brief Clear the framebuffer
+ */
 void fb_clear()
 {
     int i;
@@ -105,6 +124,12 @@ void fb_clear()
     fb_move_cursor();
 }
 
+/**
+ * @brief Put a string on the screen
+ *
+ * @param[in] str The string to place on the screen, assumes standard null
+ * terminated c string
+ */
 void fb_put_str(char *str)
 {
     while (*str)

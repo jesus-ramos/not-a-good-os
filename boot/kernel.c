@@ -14,6 +14,10 @@
 
 unsigned long total_mem;
 
+/**
+ * @brief Main initialization function for the kernel, all initialization should
+ * be done here
+ */
 void kinit()
 {
     init_console();
@@ -25,6 +29,15 @@ void kinit()
     enable_interrupts();
 }
 
+/**
+ * @brief Main entry point into the kernel
+ *
+ * @param[in] mbd data from the multiboot format to determine memory size
+ * @param magic value from the bootloader to check for corruption and correct
+ * bootloader
+ *
+ * @return This function should never return
+ */
 int kmain(struct multiboot_info *mbd, unsigned int magic)
 {
     fb_clear();

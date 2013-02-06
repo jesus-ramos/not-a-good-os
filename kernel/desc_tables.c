@@ -1,3 +1,9 @@
+/**
+ * @file
+ *
+ * Descriptor tables implementation for x86
+ */
+
 #include <kernel/string.h>
 
 #include <asm/common.h>
@@ -13,8 +19,10 @@ struct gdt_ptr gdt_ptr;
 struct idt_entry idt_entries[256];
 struct idt_ptr idt_ptr;
 
-#define IDT_SET_GATE(isrnum) idt_set_gate(isrnum, (uint32_t)isr##isrnum, 0x08, 0x8E)
-#define IDT_SET_IRQ_GATE(num, irqnum) idt_set_gate(num, (uint32_t)irq##irqnum, 0x08, 0x8E)
+#define IDT_SET_GATE(isrnum)                            \
+    idt_set_gate(isrnum, (uint32_t)isr##isrnum, 0x08, 0x8E)
+#define IDT_SET_IRQ_GATE(num, irqnum)                   \
+    idt_set_gate(num, (uint32_t)irq##irqnum, 0x08, 0x8E)
 
 #define MASTER1 (MASTER + 1)
 #define SLAVE1  (SLAVE + 1)
@@ -31,6 +39,9 @@ static void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit,
     gdt_entries[num].access       = access;
 }
 
+/**
+ * @brief Initialize the global descriptor tables and flush the data to the CPU
+ */
 static void init_gdt()
 {
     gdt_ptr.limit = (sizeof(struct gdt_entry) * 5) - 1;
@@ -56,6 +67,9 @@ static void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags
     /* idt_entries[num].flags = flags | 0x60; */
 }
 
+/**
+ * @brief Remap the interrupt request table
+ */
 static void remap_irq_table()
 {
     outportb(MASTER, 0x11);
@@ -70,6 +84,9 @@ static void remap_irq_table()
     outportb(SLAVE1, 0x00);
 }
 
+/**
+ * @brief Initialize the Interrupt Descriptor Tables and set the mappings
+ */
 static void init_idt()
 {
     idt_ptr.limit = sizeof(struct idt_entry) * 256 -1;
@@ -132,6 +149,10 @@ static void init_idt()
     idt_flush((uint32_t)&idt_ptr);
 }
 
+/**
+ * @brief Initialize the interrupt descriptor table and the global descriptor
+ * table
+ */
 void init_descriptor_tables()
 {
     init_gdt();

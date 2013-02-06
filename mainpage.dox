@@ -1,6 +1,11 @@
-/*! \mainpage JesusOS
- * \section intro_sec Introduction
+/** @mainpage JesusOS
+ * @section intro_sec Introduction
  *
  * x86 based operating system for the kinds of people that don't like operating
  * systems.
+ *
+ * @section begin Where to start?
+ *
+ * Main entry point into the kernel (after initilization) is located in
+ * boot/kernel.c in the function kmain()
  */

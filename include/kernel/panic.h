@@ -3,6 +3,11 @@
 
 #define PANIC(message) panic(message, __FILE__, __LINE__)
 #define BUG(message) bug(message, __FILE__, __LINE__)
+#define BUG_ON(cond, message)                   \
+    do {                                        \
+        if (cond)                               \
+            BUG(message);                       \
+    } while (0)
 
 void panic(const char *message, const char *file_name, unsigned int line_num);
 void bug(const char *message, const char *file_name, unsigned int line_num);

@@ -1,3 +1,10 @@
+/**
+ * @file
+ *
+ * vsprintf implementation for taking format strings with optional arguments and
+ * expanding them
+ */
+
 #include <kernel/ctype.h>
 #include <kernel/stdio.h>
 #include <kernel/string.h>
@@ -15,6 +22,20 @@
 const char *digits_large = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const char *digits_small = "0123456789abcdefghijklmnopqrstuvwxyz";
 
+/**
+ * @brief Converts a binary number to its string representation in any base from
+ * base 2 to base 36
+ *
+ * @param[out] str buffer where to expand the representation into
+ * @param num the number which to convert
+ * @param base the base which to convert the number to
+ * @param size size of the output
+ * @param precision the precision with which to expand the number to
+ * @param type flags for specifying specific formatting options
+ *
+ * @return a pointer in str that points past where the number was converted and
+ * appended
+ */
 static char *num_to_base(char *str, int num, int base, int size,
                          int precision, int type)
 {
@@ -84,6 +105,15 @@ static char *num_to_base(char *str, int num, int base, int size,
     return str;
 }
 
+/**
+ * @brief does the same as glibc atoi function except it modifies the string
+ * pointer to point past the number in the string
+ *
+ * @param[out] s a pointer to a string, modified version points past the parsed
+ * numbers in the string
+ *
+ * @return the converted number value inside s
+ */
 static int skip_atoi(const char **s)
 {
     int i;
@@ -95,6 +125,15 @@ static int skip_atoi(const char **s)
     return i;
 }
 
+/**
+ * @brief Same behavior as glibc vsprintf implementation
+ *
+ * @param[out] buf buffer where to write the expanded string into
+ * @param[in] fmt format string which to expand
+ * @parm args variable sized argument list for the format values
+ *
+ * @return length of the newly formatted string
+ */
 int vsprintf(char *buf, const char *fmt, va_list args)
 {
     int len;
@@ -232,6 +271,15 @@ int vsprintf(char *buf, const char *fmt, va_list args)
     return str - buf;
 }
 
+/**
+ * @brief Same as glibc sprintf, it's just a wrapper on top of vsprintf() that
+ * handles the variable sized argument list
+ *
+ * @param[out] buf buffer in which to write the formatted string
+ * @param[in] fmt format string which to expand
+ *
+ * @return length of the newly formatted string
+ */
 int sprintf(char *buf, const char *fmt, ...)
 {
     va_list args;

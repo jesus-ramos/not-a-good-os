@@ -1,3 +1,9 @@
+/**
+ * @file
+ *
+ * x86 implementation for paging and virtual memory
+ */
+
 #include <kernel/heap.h>
 #include <kernel/paging.h>
 #include <kernel/panic.h>
@@ -21,6 +27,12 @@ struct page_directory *current_directory;
 extern unsigned long alloc_addr;
 
 /* process.s */
+/**
+ * @brief Make a copy of a physical page, defined in process.s
+ *
+ * @param src_addr address of page to copy
+ * @param dest_address address of destination page to copy to
+ */
 extern void copy_page_physical(unsigned long src_addr,
                                unsigned long dest_address);
 
@@ -62,6 +74,12 @@ static void clear_frame(unsigned long frame_addr)
 /*     return frames[index] & (0x1 << offset); */
 /* } */
 
+/**
+ * @brief Find the first free frame available for allocation
+ *
+ * @return -1 if no free frames are left or the frame address of the first open
+ * frame
+ */
 static unsigned long first_free_frame()
 {
     int i, j;
@@ -79,6 +97,13 @@ static unsigned long first_free_frame()
     return -1;
 }
 
+/**
+ * @brief Allocate a frame for a page
+ *
+ * @param[in] page the page which to allocate the frame for
+ * @param kernel 1 if this is a kernel page 0 if it's a user page
+ * @param write 1 if the page should be writable or 0 for read-only
+ */
 void alloc_frame(struct page *page, int kernel, int write)
 {
     unsigned long index;
@@ -97,6 +122,11 @@ void alloc_frame(struct page *page, int kernel, int write)
     page->frame = index;
 }
 
+/**
+ * @brief Free a physical frame from a page
+ *
+ * @param[in] page the page which we want to remove the physical frame from
+ */
 void free_frame(struct page *page)
 {
     if (!page->frame)
@@ -106,6 +136,11 @@ void free_frame(struct page *page)
     page->frame = 0;
 }
 
+/**
+ * @brief Page fault handler for the system
+ *
+ * @param[in] regs register values when the interrupt happened
+ */
 void handle_page_fault(struct registers *regs)
 {
     unsigned long address;
@@ -119,6 +154,17 @@ void handle_page_fault(struct registers *regs)
     PANIC("PAGING NOT IMPLEMENTED YET");
 }
 
+/**
+ * @brief Get or create a page that contains address in the page table directory
+ * specified
+ *
+ * @param address address which you want to find a page for or make a page for
+ * @param make if 1 create a page if it doesn't exist, 0 means find the page
+ * @param[in] page_directory the page directory which to get this page for
+ *
+ * @return the page structure in page_directory that contains address or a new
+ * page
+ */
 struct page *get_page(unsigned long address, int make,
                       struct page_directory *page_directory)
 {
@@ -146,6 +192,14 @@ struct page *get_page(unsigned long address, int make,
     return NULL;
 }
 
+/**
+ * @brief Clone a page table
+ *
+ * @param[in] src the page table which to clone
+ * @param[in] physical address of the allocation for the cloned copy
+ *
+ * @return cloned version of src
+ */
 static struct page_table *clone_table(struct page_table *src,
                                       unsigned long *phys_addr)
 {
@@ -172,6 +226,13 @@ static struct page_table *clone_table(struct page_table *src,
     return table;
 }
 
+/**
+ * @brief Clone a page directory
+ *
+ * @param[in] src source page directory to clone
+ *
+ * @return cloned version of src
+ */
 struct page_directory *clone_directory(struct page_directory *src)
 {
     unsigned long phys_addr;
@@ -208,6 +269,9 @@ struct page_directory *clone_directory(struct page_directory *src)
     return page_dir;
 }
 
+/**
+ * @brief Initalize paging for the kernel
+ */
 void init_paging()
 {
     int size;

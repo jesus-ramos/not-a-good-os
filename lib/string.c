@@ -1,3 +1,11 @@
+/**
+ * @file
+ *
+ * Similar functions to those defined in glibc string header. Functions for
+ * handling strings as well as moving data around. This file includes optimized
+ * x86 and non-optimized generic versions for each function.
+ */
+
 #include <kernel/string.h>
 
 /* Uncomment to use non-optimized versions */

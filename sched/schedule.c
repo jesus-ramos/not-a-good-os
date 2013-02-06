@@ -1,3 +1,9 @@
+/**
+ * @file
+ *
+ * CPU scheduling implementation
+ */
+
 #include <kernel/compiler.h>
 #include <kernel/paging.h>
 #include <kernel/scheduler.h>
@@ -7,6 +13,9 @@
 
 volatile struct task *current = NULL;
 
+/**
+ * @brief CPU scheduling main function
+ */
 void schedule()
 {
     unsigned long esp, ebp, eip;
