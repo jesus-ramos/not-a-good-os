@@ -3,3 +3,6 @@ Just a simple operating system that runs in qemu
 To run:
 make
 qemu -kernel kernel.bin
+
+To get documentation run (graphvis required if you want call graphs):
+make docs
