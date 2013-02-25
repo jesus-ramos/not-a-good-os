@@ -3,6 +3,9 @@
 
 #include <kernel/types.h>
 
+/**
+ * @brief Structure for an executable task
+ */
 struct task
 {
     pid_t pid;

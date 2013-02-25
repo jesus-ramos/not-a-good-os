@@ -54,11 +54,19 @@ void clear_intterupt(uint8_t num);
 
 extern isr_t interrupt_handlers[];
 
+/**
+ * @brief Check if IRQ's are enabled on the executing core
+ *
+ * @return 1 if IRQ's are enabled, 0 otherwise
+ */
 static inline int irq_enabled()
 {
     return get_cpu_flags() & IRQ_ENABLED_FLAG;
 }
 
+/**
+ * @brief Send an EOI (End of Intterupt) to the core that caused the interrupt
+ */
 static inline void send_eoi()
 {
     outportb(0x20, 0x20);

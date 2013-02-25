@@ -1,6 +1,15 @@
 #ifndef _SWITCH_TO_H
 #define _SWITCH_TO_H
 
+/**
+ * @brief Switches the currently executing task for a new one
+ *
+ * @param new_eip new instruction pointer for the task to execute
+ * @param new_esp new stack pointer for the task to execute
+ * @param new_ebp new base pointer for the task to execute
+ * @param page_dir_addr the address of the page directory for the task to
+ * execute
+ */
 static inline void switch_task(unsigned long new_eip, unsigned long new_esp,
                                unsigned long new_ebp,
                                unsigned long page_dir_addr)

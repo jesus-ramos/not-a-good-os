@@ -1,3 +1,10 @@
+/**
+ * @file
+ *
+ * This is the main entry point into the kernel after the bootloader has handed
+ * control to our loader and simple initialization has completed
+ */
+
 #include <kernel/console.h>
 #include <kernel/keyboard.h>
 #include <kernel/paging.h>

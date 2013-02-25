@@ -15,6 +15,9 @@
 
 struct file;
 
+/**
+ * @brief Structure that defines basic file operations for a file
+ */
 struct file_operations
 {
     size_t (*read)(struct file *file, size_t offset, size_t size,
@@ -27,6 +30,10 @@ struct file_operations
     struct file *(*finddir)(struct file *file, char *name);
 };
 
+/**
+ * @brief Structure that contains all the information about a file and what
+ * operations can be performed on it
+ */
 struct file
 {
     char name[MAX_FILENAME_LEN];
@@ -41,6 +48,9 @@ struct file
     struct file *file_ptr;
 };
 
+/**
+ * @brief Directory entity structure for filesystems that support directories
+ */
 struct dirent
 {
     char name[MAX_FILENAME_LEN];
