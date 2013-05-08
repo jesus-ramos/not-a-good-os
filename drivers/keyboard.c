@@ -28,6 +28,9 @@
 #define KEYBOARD_RESEND      0xFE
 #define KEY_EXTEND_BYTE      0xE0
 
+/**
+ * @brief Keyboard scancode to character table
+ */
 static char scancode_table[] =
 {
     [0x02] = '1',
@@ -103,11 +106,20 @@ static char scancode_table[] =
     [0x53] = '.'
 };
 
+/**
+ * @brief Table used to convert the numberic row of the keyboard to it's symbol
+ */
 static char numeric_symbols[] = { '~', '!', '@', '#', '$', '%', '^', '&', '*',
                                   '(', ')', '_', '+' };
 
+/**
+ * @brief Current state of the keyboard
+ */
 struct keyboard_state kb_state;
 
+/**
+ * @brief Currently registered keyboard handler function
+ */
 static keyboard_handler_t keyboard_handler;
 
 /**

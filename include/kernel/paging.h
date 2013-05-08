@@ -13,27 +13,40 @@
 #define INVALID_RESERVED_FAULT_FLAG (1 << 3)
 #define INSN_FETCH_FAULT_FLAG       (1 << 4)
 
+/**
+ * @brief Virtual memory page information
+ */
 struct page
 {
-    int present       : 1;
-    int rw            : 1;
-    int user          : 1;
-    int accessed      : 1;
-    int dirty         : 1;
-    int reserved      : 7; /* DO NOT TOUCH! */
-    int frame         : 20;
+    int present       : 1;      /**< 1 if page is present in memory, 0 if just
+                                 * mapped */
+    int rw            : 1;      /**< Read/Write enable bit */
+    int user          : 1;      /**< User access privelege bit */
+    int accessed      : 1;      /**< Accessed bit, set if page has been read
+                                 * from */
+    int dirty         : 1;      /**< Dirty bit, set if page has been written
+                                 * to */
+    int reserved      : 7;      /**< Reserved bits, DO NOT TOUCH */
+    int frame         : 20;     /**< Frame address of the page */
 };
 
+/**
+ * @brief Page table structure
+ */
 struct page_table
 {
-    struct page pages[1024];
+    struct page pages[1024]; /**< System pages */
 };
 
+/**
+ * @brief Page directory structure
+ */
 struct page_directory
 {
-    struct page_table *page_tables[1024];
-    unsigned long tables_physical[1024];
-    unsigned long physical;
+    struct page_table *page_tables[1024]; /**< Page tables in the directory */
+    unsigned long      tables_physical[1024]; /**< Physical addresses for the
+                                               * pages */
+    unsigned long      physical; /**< Physical address of the page directory */
 };
 
 void init_paging();

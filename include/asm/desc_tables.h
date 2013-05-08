@@ -3,35 +3,47 @@
 
 #include <kernel/types.h>
 
+/**
+ * @brief Gloabl Descriptor Table Entry
+ */
 struct gdt_entry
 {
-    uint16_t limit_low;
-    uint16_t base_low;
-    uint8_t  base_middle;
-    uint8_t  access;
-    uint8_t  granularity;
-    uint8_t  base_high;
+    uint16_t limit_low;         /**< Low byte of limit */
+    uint16_t base_low;          /**< Low byte of base */
+    uint8_t  base_middle;       /**< Middle byte of base */
+    uint8_t  access;            /**< Access flags */
+    uint8_t  granularity;       /**< Granularity bit (bytes or pages) */
+    uint8_t  base_high;         /**< High byte of base */
 }__attribute__((packed));
 
+/**
+ * @brief Global Descriptor Table Pointer
+ */
 struct gdt_ptr
 {
-    uint16_t limit;
-    uint32_t base;
+    uint16_t limit; /**< Limit value for the GDT */
+    uint32_t base; /**< Base value for the GDT */
 }__attribute__((packed));
 
+/**
+ * @brief Interrupt Descriptor Table Entry
+ */
 struct idt_entry
 {
-    uint16_t base_low;
-    uint16_t selector;
-    uint8_t  zero;
-    uint8_t  flags;
-    uint16_t base_high;
+    uint16_t base_low;          /**< Low byte of base */
+    uint16_t selector;          /**< Code segment selector in GDT or LDT */
+    uint8_t  zero;              /**< UNUSED, always set to zero */
+    uint8_t  flags;             /**< Type and attributes flags */
+    uint16_t base_high;         /**< High byte of base */
 }__attribute__((packed));
 
+/**
+ * @brief Interrupt Descriptor Table Pointer
+ */
 struct idt_ptr
 {
-    uint16_t limit;
-    uint32_t base;
+    uint16_t limit;             /**< Limit value for the IDT */
+    uint32_t base;              /**< Base value for the IDT */
 }__attribute__((packed));
 
 void init_descriptor_tables();
@@ -39,7 +51,18 @@ void init_descriptor_tables();
 #define MASTER 0x20
 #define SLAVE  0xA0
 
+/**
+ * @brief Macro used to define Intterupt Service Routine handlers
+ *
+ * @param num ISR number
+ */
 #define DEF_ISR(num) extern void isr##num()
+
+/**
+ * @brief Macro used to define Interrupt Request handlers
+ *
+ * @param num IRQ number
+ */
 #define DEF_IRQ(num) extern void irq##num()
 
 DEF_ISR(0);

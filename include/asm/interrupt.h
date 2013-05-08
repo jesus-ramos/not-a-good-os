@@ -24,27 +24,29 @@
 #define IRQ14 46
 #define IRQ15 47
 
+/**
+ * @brief CPU Register State for use in interrupt handlers
+ */
 struct registers
 {
-    uint32_t ds;
-
-    uint32_t edi;
-    uint32_t esi;
-    uint32_t ebp;
-    uint32_t esp;
-    uint32_t ebx;
-    uint32_t edx;
-    uint32_t ecx;
-    uint32_t eax;
-
-    uint32_t int_num;
-    uint32_t err;
-
-    uint32_t eip;
-    uint32_t cs;
-    uint32_t eflags;
-    uint32_t user_esp;
-    uint32_t ss;
+    uint32_t ds;                /**< Data segment register */
+    uint32_t edi;               /**< Destination Index register for string
+                                 * operations */
+    uint32_t esi;               /**< Source Index register for string
+                                 * operations */
+    uint32_t ebp;               /**< Stack Base Pointer register */
+    uint32_t esp;               /**< Stack Pointer register */
+    uint32_t ebx;               /**< Base Index register used for arrays */
+    uint32_t edx;               /**< General data register */
+    uint32_t ecx;               /**< Counter register */
+    uint32_t eax;               /**< Accumulator register */
+    uint32_t int_num;           /**< Interrupt number */
+    uint32_t err;               /**< Exception/Error number */
+    uint32_t eip;               /**< Instruction pointer register */
+    uint32_t cs;                /**< Code Segment register */
+    uint32_t eflags;            /**< CPU flags */
+    uint32_t user_esp;          /**< User mode stack pointer register */
+    uint32_t ss;                /**< Stack Segment register */
 };
 
 typedef void (*isr_t)(struct registers *);
