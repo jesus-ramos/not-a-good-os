@@ -60,9 +60,9 @@ enum lock_key_bits
  */
 struct keyboard_state
 {
-    uint8_t modifier_keys;      /**< State of the modifier keys (CTRL, ALT,
-                                 * SHIFT) */
-    uint8_t lock_keys;          /**< State of the lock keys (NUM, CAPS, SCROLL */
+    uint8_t modifier_keys; /**< State of the modifier keys (CTRL, ALT, */
+                           /**< SHIFT) */
+    uint8_t lock_keys;     /**< State of the lock keys (NUM, CAPS, SCROLL) */
 };
 
 /**
@@ -73,10 +73,10 @@ struct keyevent_data
 {
     uint8_t               scancode; /**< Scancode for the keypress */
     char                  key;      /**< Converted scancode to character */
-    uint8_t               released; /**< 1 if the key was released, 0 if
-                                     * pressed */
-    struct keyboard_state kb_state; /**< Current state of the keyboard modifier
-                                     * keys and lock keys */
+    uint8_t               released; /**< 1 if the key was released, 0 if */
+                                    /**< pressed */
+    struct keyboard_state kb_state; /**< Current state of the keyboard */
+                                    /**<modifier keys and lock keys */
 };
 
 typedef void (*keyboard_handler_t)(const struct keyevent_data *);
