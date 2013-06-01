@@ -18,16 +18,13 @@
  */
 struct page
 {
-    int present       : 1;  /**< 1 if page is present in memory, 0 if just */
-                            /**< mapped */
-    int rw            : 1;  /**< Read/Write enable bit */
-    int user          : 1;  /**< User access privelege bit */
-    int accessed      : 1;  /**< Accessed bit, set if page has been read */
-                            /**< from */
-    int dirty         : 1;  /**< Dirty bit, set if page has been written */
-                            /**< to */
-    int reserved      : 7;  /**< Reserved bits, DO NOT TOUCH */
-    int frame         : 20; /**< Frame address of the page */
+    int present : 1; /**< 1 if page is present in memory, 0 if just mapped */
+    int rw : 1;  /**< Read/Write enable bit */
+    int user : 1;  /**< User access privelege bit */
+    int accessed : 1;  /**< Accessed bit, set if page has been read from */
+    int dirty : 1;  /**< Dirty bit, set if page has been written to */
+    int reserved : 7;  /**< Reserved bits, DO NOT TOUCH */
+    int frame : 20; /**< Frame address of the page */
 };
 
 /**
@@ -44,10 +41,8 @@ struct page_table
 struct page_directory
 {
     struct page_table *page_tables[1024]; /**< Page tables in the directory */
-    unsigned long tables_physical[1024];  /**< Physical addresses for the */
-                                          /**< pages */
-    unsigned long physical;               /**< Physical address of the page */
-                                          /**< directory */
+    unsigned long tables_physical[1024]; /**< Physical addresses for the pages */
+    unsigned long physical; /**< Physical address of the page directory */
 };
 
 void init_paging();

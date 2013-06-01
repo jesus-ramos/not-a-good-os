@@ -36,15 +36,15 @@ struct file_operations
  */
 struct file
 {
-    char name[MAX_FILENAME_LEN];
-    unsigned int mask;
-    unsigned int uid;
-    unsigned int gid;
-    unsigned int flags;
-    unsigned long inode;
-    size_t length;
+    char name[MAX_FILENAME_LEN]; /**< File name string */
+    unsigned int mask; /**< Permission mask */
+    unsigned int uid; /**< UID of the file */
+    unsigned int gid; /**< GID of the file */
+    unsigned int flags; /**< File flags */
+    unsigned long inode; /**< inode number */
+    size_t length; /**< File length */
     unsigned int impl;
-    struct file_operations *fops;
+    struct file_operations *fops; /**< File operations function pointer */
     struct file *file_ptr;
 };
 
@@ -53,8 +53,8 @@ struct file
  */
 struct dirent
 {
-    char name[MAX_FILENAME_LEN];
-    unsigned long inode_num;
+    char name[MAX_FILENAME_LEN]; /**< Directory name */
+    unsigned long inode_num; /**< Directory inode number */
 };
 
 extern struct file *root_fs;

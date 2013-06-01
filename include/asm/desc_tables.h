@@ -8,12 +8,12 @@
  */
 struct gdt_entry
 {
-    uint16_t limit_low;         /**< Low byte of limit */
-    uint16_t base_low;          /**< Low byte of base */
-    uint8_t  base_middle;       /**< Middle byte of base */
-    uint8_t  access;            /**< Access flags */
-    uint8_t  granularity;       /**< Granularity bit (bytes or pages) */
-    uint8_t  base_high;         /**< High byte of base */
+    uint16_t limit_low; /**< Low byte of limit */
+    uint16_t base_low; /**< Low byte of base */
+    uint8_t  base_middle; /**< Middle byte of base */
+    uint8_t  access; /**< Access flags */
+    uint8_t  granularity; /**< Granularity bit (bytes or pages) */
+    uint8_t  base_high; /**< High byte of base */
 }__attribute__((packed));
 
 /**
@@ -30,11 +30,11 @@ struct gdt_ptr
  */
 struct idt_entry
 {
-    uint16_t base_low;          /**< Low byte of base */
-    uint16_t selector;          /**< Code segment selector in GDT or LDT */
-    uint8_t  zero;              /**< UNUSED, always set to zero */
-    uint8_t  flags;             /**< Type and attributes flags */
-    uint16_t base_high;         /**< High byte of base */
+    uint16_t base_low; /**< Low byte of base */
+    uint16_t selector; /**< Code segment selector in GDT or LDT */
+    uint8_t  zero; /**< UNUSED, always set to zero */
+    uint8_t  flags; /**< Type and attributes flags */
+    uint16_t base_high; /**< High byte of base */
 }__attribute__((packed));
 
 /**
@@ -42,8 +42,8 @@ struct idt_entry
  */
 struct idt_ptr
 {
-    uint16_t limit;             /**< Limit value for the IDT */
-    uint32_t base;              /**< Base value for the IDT */
+    uint16_t limit; /**< Limit value for the IDT */
+    uint32_t base; /**< Base value for the IDT */
 }__attribute__((packed));
 
 void init_descriptor_tables();

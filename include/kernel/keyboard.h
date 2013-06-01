@@ -71,12 +71,11 @@ struct keyboard_state
  */
 struct keyevent_data
 {
-    uint8_t               scancode; /**< Scancode for the keypress */
-    char                  key;      /**< Converted scancode to character */
-    uint8_t               released; /**< 1 if the key was released, 0 if */
-                                    /**< pressed */
+    uint8_t scancode; /**< Scancode for the keypress */
+    char key; /**< Converted scancode to character */
+    uint8_t released; /**< 1 if the key was released, 0 if pressed */
     struct keyboard_state kb_state; /**< Current state of the keyboard */
-                                    /**<modifier keys and lock keys */
+                                    /**< modifier keys and lock keys */
 };
 
 typedef void (*keyboard_handler_t)(const struct keyevent_data *);
