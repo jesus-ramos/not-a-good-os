@@ -1,0 +1,7 @@
+#ifndef _ASM_CPUFEATURES_H
+#define _ASM_CPUFEATURES_H
+
+#define NUM_INFO_WORDS 10
+#define NUM_BUG_FLAGS 1
+
+#endif /* _ASM_CPUFEATURES_H */
