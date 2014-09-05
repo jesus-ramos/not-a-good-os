@@ -1,8 +1,13 @@
 Just a simple operating system that runs in qemu
 
+Requirements:
+qemu
+nasm
+doxygen (for documentation)
+
 To run:
 make
-qemu -kernel kernel.bin
+qemu-system-i386 -kernel bin/kernel.bin
 
 To get documentation run (graphvis required if you want call graphs):
 make docs
