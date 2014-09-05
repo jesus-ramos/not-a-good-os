@@ -13,7 +13,7 @@ DOC_CFG = doxygen.config
 
 BINDIR	= bin
 DEPSDIR = deps
-MKDIRS	= $(CURDIR)/{$(BINDIR),$(DEPSDIR)}
+MKDIRS	= $(BINDIR) $(DEPSDIR)
 
 TARGET	= $(BINDIR)/kernel.bin
 SYMS	= $(BINDIR)/kernel.syms
