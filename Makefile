@@ -27,7 +27,7 @@ SRCS	+= keyboard.c screen.c timer.c
 # fs
 SRCS	+= fs.c
 # kernel
-SRCS	+= console.c desc_tables.c isr.c panic.c printk.c task.c
+SRCS	+= console.c desc_tables.c isr.c panic.c printk.c shutdown.c task.c
 ASSRCS	+= gdt.s interrupt.s
 # lib
 SRCS	+= string.c vsprintf.c

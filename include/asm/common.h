@@ -122,4 +122,20 @@ static inline void enable_interrupts()
     asm volatile ("sti");
 }
 
+/**
+ * @brief Halt the current CPU
+ */
+static inline void arch_halt()
+{
+    asm volatile ("hlt");
+}
+
+/**
+ * @brief Disable interrupts and halt the current CPU
+ */
+static inline void arch_safe_halt()
+{
+    asm volatile ("sti; hlt");
+}
+
 #endif /* _ASM_COMMON_H */
