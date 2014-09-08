@@ -19,23 +19,10 @@ TARGET	= $(BINDIR)/kernel.bin
 SYMS	= $(BINDIR)/kernel.syms
 
 VPATH	= boot drivers fs kernel lib mem sched
-# boot
-SRCS	+= kernel.c
-ASSRCS	+= loader.s
-# drivers
-SRCS	+= keyboard.c screen.c timer.c
-# fs
-SRCS	+= fs.c
-# kernel
-SRCS	+= console.c desc_tables.c isr.c panic.c printk.c shutdown.c task.c
-ASSRCS	+= gdt.s interrupt.s
-# lib
-SRCS	+= string.c vsprintf.c
-# mem
-SRCS	+= heap.c paging.c
-ASSRCS	+= process.s
-# sched
-SRCS	+= schedule.c
+
+VPATH_MKFILES = $(addsuffix /Makefile,${VPATH})
+
+include $(VPATH_MKFILES)
 
 OBJS	= $(addprefix $(BINDIR)/,${SRCS:.c=.o})
 ASOBJS	= $(addprefix $(BINDIR)/,${ASSRCS:.s=.o})
