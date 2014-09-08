@@ -131,7 +131,8 @@ static inline void arch_halt()
 }
 
 /**
- * @brief Disable interrupts and halt the current CPU
+ * @brief Enable interrupts and halt the current CPU. Interrupts left enabled to
+ * allow for waking up CPU.
  */
 static inline void arch_safe_halt()
 {

@@ -13,5 +13,6 @@ void shutdown()
 {
     printk("Shutting down kernel\n");
 
+    disable_interrupts();
     arch_halt();
 }
