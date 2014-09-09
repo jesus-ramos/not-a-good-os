@@ -160,7 +160,7 @@ void handle_page_fault(struct registers *regs)
  *
  * @param address address which you want to find a page for or make a page for
  * @param make if 1 create a page if it doesn't exist, 0 means find the page
- * @param[in] page_directory the page directory which to get this page for
+ * @param[in/out] page_directory the page directory which to get this page for
  *
  * @return the page structure in page_directory that contains address or a new
  * page
@@ -180,7 +180,7 @@ struct page *get_page(unsigned long address, int make,
 
     if (make)
     {
-        page_directory->page_tables[table_index] = (struct page_table *)
+        page_directory->page_tables[table_index] =
             kmalloc_align_phys(sizeof(struct page_table), &tmp);
         memset(page_directory->page_tables[table_index], 0, PAGE_SIZE);
         page_directory->tables_physical[table_index] = tmp | 0x7;
@@ -241,11 +241,9 @@ struct page_directory *clone_directory(struct page_directory *src)
     int i;
     unsigned long phys;
 
-    page_dir = (struct page_directory *)
-        kmalloc_align_phys(sizeof(struct page_directory), &phys_addr);
+    page_dir = kmalloc_align_phys(sizeof(struct page_directory), &phys_addr);
     memset(page_dir, 0, sizeof(struct page_directory));
-    offset = (unsigned long)page_dir->tables_physical -
-        (unsigned long)page_dir;
+    offset = (unsigned long)page_dir->tables_physical -(unsigned long)page_dir;
     page_dir->physical = phys_addr + offset;
 
     for (i = 0; i < 1024; i++)
@@ -255,13 +253,12 @@ struct page_directory *clone_directory(struct page_directory *src)
 
         if (kernel_directory->page_tables[i] == src->page_tables[i])
         {
-            page_dir->page_tables[i]          = src->page_tables[i];
+            page_dir->page_tables[i] = src->page_tables[i];
             page_dir->tables_physical[i] = src->tables_physical[i];
         }
         else
         {
-            page_dir->page_tables[i] = clone_table(src->page_tables[i],
-                                                   &phys);
+            page_dir->page_tables[i] = clone_table(src->page_tables[i], &phys);
             page_dir->tables_physical[i] = phys | 0x07;
         }
     }
@@ -279,11 +276,10 @@ void init_paging()
 
     num_frames = mem_end / PAGE_SIZE;
     size = INDEX_FROM_BIT(num_frames);
-    frames = (unsigned long *)kmalloc(size);
+    frames = kmalloc(size);
     memset(frames, 0, size);
 
-    kernel_directory = (struct page_directory *)
-        kmalloc_aligned(sizeof(struct page_directory));
+    kernel_directory = kmalloc_aligned(sizeof(struct page_directory));
     memset(kernel_directory, 0, sizeof(struct page_directory));
     current_directory = kernel_directory;
 

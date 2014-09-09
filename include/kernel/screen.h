@@ -3,8 +3,8 @@
 
 #include <kernel/types.h>
 
-void fb_put_char(char c);
-void fb_clear();
-void fb_put_str(char *str);
+void vga_init();
+void vga_put_char(char c);
+void vga_put_str(char *str);
 
 #endif /* _SCREEN_H */

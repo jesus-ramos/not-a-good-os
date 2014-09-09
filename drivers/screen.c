@@ -13,29 +13,75 @@
 #define VGA_HIGH_BYTE 14
 #define VGA_LOW_BYTE  15
 
-#define ATTR_BYTE(fore_color, back_color)       \
-    ((back_color << 4) | (fore_color & 0x0F))
-#define ATTR(fore_color, back_color)            \
-    (ATTR_BYTE(fore_color, back_color) << 8)
+/**
+ * @brief All colors supported by VGA display
+ */
+enum vga_color
+{
+    BLACK = 0,
+    BLUE,
+    GREEN,
+    CYAN,
+    RED,
+    MAGENTA,
+    BROWN,
+    LIGHT_GREY,
+    DARK_GREY,
+    LIGHT_BLUE,
+    LIGHT_GREEN,
+    LIGHT_CYAN,
+    LIGHT_RED,
+    LIGHT_MAGENTA,
+    LIGHT_BROWN,
+    WHITE
+};
 
-#define BLANK (0x20 | (ATTR_BYTE(WHITE, BLACK) << 8))
+typedef uint8_t vga_color_t;
+typedef uint16_t vga_char_t;
 
-#define BLACK 0
-#define WHITE 15
+#define VGA_WIDTH 80
+#define VGA_HEIGHT 25
 
-uint16_t cursor_x = 0;
-uint16_t cursor_y = 0;
+size_t cursor_x = 0;
+size_t cursor_y = 0;
+vga_color_t vga_term_color;
+volatile vga_char_t *vid_mem = (volatile uint16_t *)0xb8000;
 
-volatile uint16_t *vid_mem = (volatile uint16_t *)0xb8000;
+/**
+ * @brief Create a vga character color
+ *
+ * @param fg_color the foreground color of the character
+ * @param bg_color the background color of the character
+ *
+ * @return a vga_color_t consisting of fg_color and bg_color
+ */
+static inline vga_color_t make_vga_color(enum vga_color fg_color,
+                                         enum vga_color bg_color)
+{
+    return fg_color | (bg_color << 4);
+}
+
+/**
+ * @brief Create a vga displayable character
+ *
+ * @param c the character to display
+ * @param color the color the character should be
+ */
+static inline vga_char_t make_vga_char(char c, vga_color_t color)
+{
+    return c | color << 8;
+}
+
+#define BLANK (make_vga_char(0x20, vga_term_color))
 
 /**
  * @brief Move the frame buffer cursor to the appropriate location on screen
  */
-static void fb_move_cursor()
+static void vga_move_cursor()
 {
-    uint16_t cursor_loc;
+    vga_char_t cursor_loc;
 
-    cursor_loc = cursor_y * 80 + cursor_x;
+    cursor_loc = cursor_y * VGA_WIDTH + cursor_x;
 
     outportb(VGA_CMD, VGA_HIGH_BYTE);
     outportb(VGA_DATA, cursor_loc >> 8);
@@ -46,30 +92,30 @@ static void fb_move_cursor()
 /**
  * @brief Scroll the frame buffer if necessary
  */
-static void fb_scroll()
+static void vga_scroll()
 {
     int i;
 
-    if (cursor_y >= 25)
+    if (cursor_y >= VGA_HEIGHT)
     {
-        for (i = 0; i < 24 * 80; i++)
-            vid_mem[i] = vid_mem[i + 80];
-        for (i = 24 * 80; i < 25 * 80; i++)
+        for (i = 0; i < (VGA_HEIGHT - 1) * VGA_WIDTH; i++)
+            vid_mem[i] = vid_mem[i + VGA_WIDTH];
+        for (i = (VGA_HEIGHT - 1) * VGA_WIDTH; i < VGA_HEIGHT * VGA_WIDTH; i++)
             vid_mem[i] = BLANK;
-        cursor_y = 24;
+        cursor_y = VGA_HEIGHT - 1;
     }
 }
 
-#define FB_LOCATION (vid_mem + cursor_y * 80 + cursor_x)
+#define VGA_LOCATION (vid_mem + cursor_y * VGA_WIDTH + cursor_x)
 
 /**
  * @brief Put a character onto the screen
  *
  * @param c Character to put on the screen
  */
-void fb_put_char(char c)
+void vga_put_char(char c)
 {
-    volatile uint16_t *loc;
+    volatile vga_char_t *loc;
 
     switch (c)
     {
@@ -77,7 +123,7 @@ void fb_put_char(char c)
             if (cursor_x)
             {
                 cursor_x--;
-                loc = FB_LOCATION;
+                loc = VGA_LOCATION;
                 *loc = BLANK;
             }
             break;
@@ -92,36 +138,36 @@ void fb_put_char(char c)
             cursor_y++;
             break;
         default:
-            loc = FB_LOCATION;
-            *loc = c | ATTR(WHITE, BLACK);
+            loc = VGA_LOCATION;
+            *loc = make_vga_char(c, vga_term_color);
             cursor_x++;
     }
 
-    if (cursor_x >= 80)
+    if (cursor_x >= VGA_WIDTH)
     {
         cursor_x = 0;
         cursor_y++;
     }
 
-    fb_scroll();
-    fb_move_cursor();
+    vga_scroll();
+    vga_move_cursor();
 }
 
-#undef FB_LOCATION
+#undef VGA_LOCATION
 
 /**
  * @brief Clear the framebuffer
  */
-void fb_clear()
+void vga_clear()
 {
     int i;
 
-    for (i = 0; i < 25 * 80; i++)
+    for (i = 0; i < VGA_HEIGHT * VGA_WIDTH; i++)
         vid_mem[i] = BLANK;
 
     cursor_x = 0;
     cursor_y = 0;
-    fb_move_cursor();
+    vga_move_cursor();
 }
 
 /**
@@ -130,8 +176,17 @@ void fb_clear()
  * @param[in] str The string to place on the screen, assumes standard null
  * terminated c string
  */
-void fb_put_str(char *str)
+void vga_put_str(char *str)
 {
     while (*str)
-        fb_put_char(*str++);
+        vga_put_char(*str++);
+}
+
+/**
+ * @brief Initialize the VGA display
+ */
+void vga_init()
+{
+    vga_term_color = make_vga_color(WHITE, BLACK);
+    vga_clear();
 }

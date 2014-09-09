@@ -7,11 +7,11 @@
 
 #define PAGE_FAULT_IRQ 14
 
-#define PAGE_PRESENT_FAULT_FLAG     (1 << 0)
-#define WRITE_FAULT_FLAG            (1 << 1)
-#define USER_MODE_FAULT_FLAG        (1 << 2)
-#define INVALID_RESERVED_FAULT_FLAG (1 << 3)
-#define INSN_FETCH_FAULT_FLAG       (1 << 4)
+#define PAGE_PRESENT_FAULT     (1 << 0)
+#define WRITE_FAULT            (1 << 1)
+#define USER_MODE_FAULT        (1 << 2)
+#define INVALID_RESERVED_FAULT (1 << 3)
+#define INSN_FETCH_FAULT       (1 << 4)
 
 /**
  * @brief Virtual memory page information

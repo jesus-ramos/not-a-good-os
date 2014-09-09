@@ -22,6 +22,6 @@ void printk(const char *fmt, ...)
 
     va_start(args, fmt);
     vsprintf(kern_buf, fmt, args);
-    fb_put_str(kern_buf);
+    vga_put_str(kern_buf);
     va_end(args);
 }

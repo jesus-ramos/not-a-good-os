@@ -47,7 +47,8 @@ void kinit()
  */
 int kmain(struct multiboot_info *mbd, unsigned int magic)
 {
-    fb_clear();
+    /* Initialize the VGA display first to clear the screen */
+    vga_init();
 
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
         PANIC("Received bad magic value from bootloader!!!");
