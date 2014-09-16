@@ -8,3 +8,8 @@ TAGS
 kernel.syms
 cscope*
 docs
+*.aux
+*.log
+*.pdf
+*.toc
+.DS_Store
