@@ -1,6 +1,6 @@
 CC	= gcc
 CFLAGS	= -Wall -m32 -I./include/ -nostdlib -fno-builtin -nostartfiles \
-	  -nodefaultlibs -mno-sse -O3 -g
+	  -nodefaultlibs -mno-sse -ffreestanding -O3 -g
 AS	= nasm
 ASFLAGS = -f elf -Ox
 
