@@ -23,6 +23,15 @@ static inline void enable_paging()
     asm volatile ("mov %0, %%cr0" : : "r" (cr0));
 }
 
+static inline void disable_paging()
+{
+    uint32_t cr0;
+
+    asm volatile ("mov %%cr0, %0" : "=r" (cr0));
+    cr0 &= ~ENABLE_PAGING_FLAG;
+    asm volatile ("mov %0, %%cr0" : : "r" (cr0));
+}
+
 static inline void switch_page_directory(struct page_directory *page_dir)
 {
     asm volatile ("mov %0, %%cr3" : : "r" (page_dir->tables_physical));

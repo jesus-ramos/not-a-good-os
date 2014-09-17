@@ -24,6 +24,32 @@
 #define IRQ14 46
 #define IRQ15 47
 
+/* List of CPU Exceptions */
+#define DIV_BY_ZERO 0x00
+#define RESERVED1_EXCEPTION 0x01
+#define NMI_INTERRUPT 0x02
+#define BREAKPOINT 0x03 /* INT(3) */
+#define OVERFLOW 0x04 /* INTO */
+#define BOUNDS_RANGE_EXCEEDED 0x05 /* BOUND */
+#define INVALID_OPCODE 0x06 /* UD2 */
+#define DEVICE_NOT_AVAILABLE 0x07 /* WAIT/FWAIT */
+#define DOUBLE_FAULT 0x08
+#define COPROC_SEG_OVERRUN 0x09
+#define INVALID_TSS 0x0A
+#define SEGMENT_NOT_PRESENT 0x0B
+#define STACK_SEGMENT_FAULT 0x0C
+#define GENERAL_PROTECTION_FAULT 0x0D
+#define PAGE_FAULT 0x0E
+#define RESERVED2_EXCEPTION 0x0F
+#define X87_FPU_ERROR 0x10
+#define ALIGNMENT_CHECK 0x11
+#define MACHINE_CHECK 0x12
+#define SIMD_FP_EXCEPTION 0x13
+
+/* List of IRQ's */
+#define TIMER_IRQ IRQ0
+#define KEYBOARD_IRQ IRQ1
+
 /**
  * @brief CPU Register State for use in interrupt handlers
  */
@@ -73,5 +99,7 @@ static inline void send_eoi()
 {
     outportb(0x20, 0x20);
 }
+
+void setup_cpu_exception_handling();
 
 #endif /* _INTERRUPT_H */

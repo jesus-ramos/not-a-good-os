@@ -290,7 +290,5 @@ void init_paging()
         i += PAGE_SIZE;
     }
 
-    register_interrupt_handler(PAGE_FAULT_IRQ, handle_page_fault);
-
     switch_page_directory(kernel_directory);
 }

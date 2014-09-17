@@ -11,8 +11,6 @@
 #include <asm/common.h>
 #include <asm/interrupt.h>
 
-#define TIMER_IRQ IRQ0
-
 uint32_t tick = 0;
 
 /**

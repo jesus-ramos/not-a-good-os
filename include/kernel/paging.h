@@ -1,11 +1,11 @@
 #ifndef _PAGING_H
 #define _PAGING_H
 
+#include <asm/interrupt.h>
+
 #include <kernel/types.h>
 
 #define PAGE_SIZE 4096
-
-#define PAGE_FAULT_IRQ 14
 
 #define PAGE_PRESENT_FAULT     (1 << 0)
 #define WRITE_FAULT            (1 << 1)
@@ -54,5 +54,7 @@ extern unsigned long total_mem;
 extern unsigned long mem_end;
 
 extern struct page_directory *current_directory;
+
+void handle_page_fault(struct registers *regs);
 
 #endif /* _PAGING_H */

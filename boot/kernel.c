@@ -29,6 +29,7 @@ void kinit()
 {
     init_console();
     init_descriptor_tables();
+    setup_cpu_exception_handling();
     init_paging();
     init_keyboard();
     init_timer(SCHED_TICK);

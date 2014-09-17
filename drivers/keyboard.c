@@ -13,8 +13,6 @@
 
 #include <asm/interrupt.h>
 
-#define KEYBOARD_IRQ IRQ1
-
 #define KEY_RELEASED_BIT 7
 #define KEY_RELEASED     (1 << KEY_RELEASED_BIT)
 
