@@ -45,7 +45,7 @@ $(BINDIR)/%.o : %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(BINDIR)/%.o : %.S
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) -D__ASSEMBLY__ -o $@ -c $<
 
 $(BINDIR)/%.o : %.s
 	$(AS) $(ASFLAGS) -o $@ $<

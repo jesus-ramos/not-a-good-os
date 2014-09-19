@@ -1,9 +1,8 @@
-#define ASM_FILE 1
 #include "multiboot.h"
 
 #define STACK_SIZE 0x4000 /* 16k stack size */
 
-#define MULTIBOOT_HEADER_FLAGS 0x3 /* We're an ELF binary */
+#define MULTIBOOT_HEADER_FLAGS (MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO)
 
         .text
         .globl  loader, _loader
