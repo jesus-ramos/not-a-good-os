@@ -36,4 +36,18 @@
 void panic(const char *message, const char *file_name, unsigned int line_num);
 void bug(const char *message, const char *file_name, unsigned int line_num);
 
+/** Defined in loader.S */
+void __attribute__((noreturn)) hang();
+
+/**
+ * @brief Have the kernel commit sudoku
+ *
+ * @return This function is long gone like the ex girlfriend that will never
+ * return
+ */
+static inline void sudoku()
+{
+    hang();
+}
+
 #endif /* _PANIC_H */

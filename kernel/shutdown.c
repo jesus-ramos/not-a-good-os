@@ -5,8 +5,8 @@
  */
 
 #include <asm/common.h>
-#include <asm/shutdown.h>
 
+#include <kernel/shutdown.h>
 #include <kernel/stdio.h>
 
 void shutdown()

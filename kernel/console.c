@@ -5,11 +5,10 @@
  * to the screen
  */
 
-#include <asm/shutdown.h>
-
 #include <kernel/console.h>
 #include <kernel/ctype.h>
 #include <kernel/keyboard.h>
+#include <kernel/shutdown.h>
 #include <kernel/stdio.h>
 
 /**
@@ -20,6 +19,7 @@
  */
 void handle_console_input(const struct keyevent_data *keyevent)
 {
+    /* CTRL + C to shutdown for now */
     if (tolower(keyevent->key) == 'c' &&
         (keyevent->kb_state.modifier_keys & CTRL_SET))
         shutdown();

@@ -16,10 +16,10 @@ pid_t fork()
 
     disable_interrupts();
 
-    parent = (struct task *)current;
+    parent = (struct task *)current; /* Cast required because volatile */
     page_dir = clone_directory(current_directory);
 
-    new_task = (struct task *)kmalloc(sizeof(struct task));
+    new_task = kmalloc(sizeof(struct task));
     new_task->pid = next_pid++;
     new_task->esp = 0;
     new_task->ebp = 0;

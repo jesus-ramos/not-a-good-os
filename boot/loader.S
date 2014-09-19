@@ -25,6 +25,8 @@ multiboot_entry:
         pushl   %eax    /* Magic value */
         pushl   %ebx    /* Pointer to struct multiboot_info */
         call    kmain
+
+        .globl  hang
 hang:
         hlt
         jmp     hang
