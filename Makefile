@@ -26,21 +26,25 @@ include $(VPATH_MKFILES)
 
 OBJS	= $(addprefix $(BINDIR)/,${SRCS:.c=.o})
 ASOBJS	= $(addprefix $(BINDIR)/,${ASSRCS:.s=.o})
+CCASOBJS = $(addprefix $(BINDIR)/,${CCASSRCS:.S=.o})
 DEPS	= $(addprefix $(DEPSDIR)/,${SRCS:.c=.d})
 
 .SUFFIXES :
-.SUFFIXES : .o .c .s
+.SUFFIXES : .o .c .s .S
 
 $(shell `mkdir -p $(MKDIRS)`)
 
 all : $(TARGET)
 
-$(TARGET) : $(OBJS) $(ASOBJS) $(LDCFG)
-	$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS)
+$(TARGET) : $(OBJS) $(ASOBJS) $(CCASOBJS) $(LDCFG)
+	$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASOBJS) $(CCASOBJS)
 	objcopy --only-keep-debug $(TARGET) $(SYMS)
 	objcopy --strip-debug $(TARGET)
 
 $(BINDIR)/%.o : %.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(BINDIR)/%.o : %.S
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(BINDIR)/%.o : %.s

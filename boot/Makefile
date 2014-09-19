@@ -1,2 +1,2 @@
 SRCS   += kernel.c
-ASSRCS += loader.s
+CCASSRCS += loader.S
