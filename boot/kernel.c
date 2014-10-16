@@ -19,18 +19,34 @@
 
 #include "multiboot.h"
 
-unsigned long total_mem;
+extern int __kernel_start;
+extern int __kernel_end;
+unsigned long kernel_start_addr = (unsigned long)&__kernel_start;
+unsigned long kernel_end_addr = (unsigned long)&__kernel_end;
 
 /**
  * @brief Main initialization function for the kernel, all initialization should
  * be done here
+ *
+ * @param[in] mbd pointer to the multiboot info struct
+ *
+ * Any initialization that fails in this function should just PANIC() as most of
+ * this is pretty important stuff
  */
-void kinit()
+void kinit(const struct multiboot_info *mbd)
 {
+    /* This includes memory occupied by the kernel */
+    unsigned long avail_mem_mb = mbd->mem_upper / 1024;
+
     init_console();
+
+    printk("Loaded kernel from address 0x%X to address 0x%X\n",
+           kernel_start_addr, kernel_end_addr);
+    printk("Available memory %uMB\n", avail_mem_mb);
+
     init_descriptor_tables();
     setup_cpu_exception_handling();
-    init_paging();
+    /* init_paging(); */
     init_keyboard();
     init_timer(SCHED_TICK);
 
@@ -46,7 +62,7 @@ void kinit()
  *
  * @return This function should never return
  */
-int kmain(struct multiboot_info *mbd, unsigned int magic)
+int kmain(const struct multiboot_info *mbd, unsigned int magic)
 {
     /* Initialize the VGA display first to clear the screen */
     vga_init();
@@ -54,16 +70,10 @@ int kmain(struct multiboot_info *mbd, unsigned int magic)
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
         PANIC("Received bad magic value from bootloader!!!");
 
-    if (mbd->flags & MULTIBOOT_INFO_MEMORY)
-    {
-        total_mem = mbd->mem_lower + mbd->mem_upper;
-        mem_end = total_mem * 1024;
-        printk("Booting with: %u kb of memory\n", total_mem);
-    }
-    else
+    if (!mbd->flags & MULTIBOOT_INFO_MEMORY)
         PANIC("Could not determine memory size");
 
-    kinit();
+    kinit(mbd);
 
     while (1);
 

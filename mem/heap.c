@@ -11,8 +11,8 @@
 #define ALIGN_INC PAGE_SIZE
 
 /* linker.ld */
-extern unsigned int end;
-unsigned long alloc_addr = (unsigned long)&end;
+extern int __kernel_end;
+unsigned long alloc_addr = (unsigned long)&__kernel_end;
 
 /**
  * @brief internal function for kmalloc() functions depending on alignment or

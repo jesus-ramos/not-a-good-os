@@ -4,6 +4,7 @@ OUTPUT_FORMAT(elf32-i386)
 SECTIONS
 {
     . = 0x00100000;
+    __kernel_start = .;
 
     /* If $(BINDIR) changes, change it here as well */
     .MBHEADER :
@@ -36,5 +37,5 @@ SECTIONS
         ebss = .;
     }
 
-    end = .; _end = .; __end = .;
+    __kernel_end = .;
 }
