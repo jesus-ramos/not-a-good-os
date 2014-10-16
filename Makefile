@@ -45,7 +45,7 @@ $(BINDIR)/%.o : %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(BINDIR)/%.o : %.S
-	$(CC) $(CFLAGS) -D__ASSEMBLY__ -o $@ -c $<
+	$(CC) $(CFLAGS) -DASM_FILE=1 -o $@ -c $<
 
 $(BINDIR)/%.o : %.s
 	$(AS) $(ASFLAGS) -o $@ $<

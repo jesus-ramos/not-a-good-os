@@ -1,1 +1,1 @@
-SRCS += keyboard.c screen.c timer.c
+SRCS += keyboard.c vga.c

@@ -187,6 +187,6 @@ void vga_put_str(char *str)
  */
 void vga_init()
 {
-    vga_term_color = make_vga_color(WHITE, BLACK);
+    vga_term_color = make_vga_color(LIGHT_GREEN, BLACK);
     vga_clear();
 }
