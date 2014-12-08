@@ -40,12 +40,12 @@ void bug(const char *message, const char *file_name, unsigned int line_num);
 void __attribute__((noreturn)) hang();
 
 /**
- * @brief Have the kernel commit sudoku
+ * @brief Have the kernel commit seppuku
  *
  * @return This function is long gone like the ex girlfriend that will never
  * return
  */
-static inline void sudoku()
+static inline void seppuku()
 {
     hang();
 }
